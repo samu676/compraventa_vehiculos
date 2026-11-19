@@ -1,14 +1,26 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Inicio{% endblock %} · CompraVenta de Vehículos</title>
+  <script>
+    // Aplica el tema guardado (claro/oscuro) antes de dibujar la página, para que no "parpadee"
+    (function () {
+      let tema = null;
+      try { tema = localStorage.getItem('tema'); } catch (e) { /* sin almacenamiento */ }
+      if (!tema) tema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-bs-theme', tema);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
-<body class="bg-body-tertiary d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100">
 {% set menu = [
   ('marcas.listar',      'Marcas',      'award'),
   ('vehiculos.listar',   'Vehículos',   'car-front'),
@@ -16,35 +28,43 @@
   ('asesores.listar',    'Asesores',    'person-badge'),
   ('operaciones.listar', 'Operaciones', 'arrow-left-right'),
 ] %}
-<nav class="navbar navbar-expand-lg navbar-dark app-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-semibold" href="{{ url_for('inicio') }}">
-      <i class="bi bi-car-front-fill"></i> CompraVenta
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url_for('inicio') }}">
+      <span class="logo"><i class="bi bi-car-front-fill"></i></span> CompraVenta
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
             aria-controls="nav" aria-expanded="false" aria-label="Menú">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="nav">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto gap-lg-1 my-2 my-lg-0">
         {% for endpoint, label, icon in menu %}
           {% set activo = request.blueprint and endpoint.startswith(request.blueprint ~ '.') %}
           <li class="nav-item">
-            <a class="nav-link {{ 'active' if activo }}" href="{{ url_for(endpoint) }}">
+            <a class="nav-link {{ 'active' if activo }}" href="{{ url_for(endpoint) }}"
+               {{ 'aria-current="page"'|safe if activo }}>
               <i class="bi bi-{{ icon }}"></i> {{ label }}
             </a>
           </li>
         {% endfor %}
       </ul>
+      <button type="button" class="btn btn-tema ms-lg-3 mb-2 mb-lg-0" id="cambiar-tema"
+              title="Cambiar entre modo claro y oscuro" aria-label="Cambiar entre modo claro y oscuro">
+        <i class="bi bi-moon-stars"></i>
+      </button>
     </div>
   </div>
 </nav>
 
-<main class="container py-4 flex-grow-1 contenido">
+<main class="container py-4 py-lg-5 flex-grow-1 contenido">
+  {% set iconos = {'success': 'check-circle-fill', 'danger': 'exclamation-octagon-fill',
+                   'warning': 'exclamation-triangle-fill', 'info': 'info-circle-fill'} %}
   {% with mensajes = get_flashed_messages(with_categories=true) %}
     {% for categoria, mensaje in mensajes %}
       <div class="alert alert-{{ categoria }} alert-dismissible fade show" role="alert">
-        {{ mensaje }}
+        <i class="bi bi-{{ iconos.get(categoria, 'info-circle-fill') }}"></i>
+        <div>{{ mensaje }}</div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
       </div>
     {% endfor %}
@@ -53,8 +73,14 @@
   {% block content %}{% endblock %}
 </main>
 
-<footer class="text-center text-secondary small py-3">
-  Compra y venta de vehículos · Flask + PostgreSQL · Proyecto final de Programación Web
+<footer class="pie py-4 mt-4">
+  <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2 small text-secondary">
+    <span class="d-flex align-items-center gap-2">
+      <span class="logo" style="width:1.6rem;height:1.6rem;font-size:.85rem"><i class="bi bi-car-front-fill"></i></span>
+      CompraVenta de Vehículos
+    </span>
+    <span>Proyecto final · Programación Web · Flask + PostgreSQL</span>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

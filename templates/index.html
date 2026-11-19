@@ -2,16 +2,16 @@
 {% import "_vehiculo.html" as dibujo %}
 {% block title %}Inicio{% endblock %}
 {% block content %}
-<div class="hero rounded-4 p-4 p-md-5 mb-4 text-white">
-  <div class="row align-items-center g-3">
-    <div class="col-md-7">
-      <span class="badge rounded-pill text-bg-light mb-2"><i class="bi bi-shield-check"></i> Vehículos usados certificados</span>
-      <h1 class="display-6 fw-semibold mb-2">CompraVenta de Vehículos</h1>
-      <p class="mb-4 opacity-75">Gestiona el inventario, los clientes, los asesores y cada compra y venta
+<div class="hero p-4 p-md-5 mb-4 text-white">
+  <div class="row align-items-center g-4">
+    <div class="col-md-7 position-relative" style="z-index: 1">
+      <span class="badge rounded-pill etiqueta mb-3 px-3 py-2"><i class="bi bi-shield-check"></i> Vehículos usados certificados</span>
+      <h1 class="display-5 mb-3">Compra y vende vehículos <span class="resaltado">sin complicaciones</span></h1>
+      <p class="mb-4 opacity-75 fs-6">Gestiona el inventario, los clientes, los asesores y cada operación
         del concesionario desde un solo lugar.</p>
       <div class="d-flex flex-wrap gap-2">
-        <a href="{{ url_for('vehiculos.listar') }}" class="btn btn-light"><i class="bi bi-grid-3x2-gap"></i> Ver catálogo</a>
-        <a href="{{ url_for('operaciones.crear') }}" class="btn btn-outline-light"><i class="bi bi-plus-lg"></i> Nueva operación</a>
+        <a href="{{ url_for('vehiculos.listar') }}" class="btn btn-light px-4"><i class="bi bi-grid-3x2-gap"></i> Ver catálogo</a>
+        <a href="{{ url_for('operaciones.crear') }}" class="btn btn-primary px-4"><i class="bi bi-plus-lg"></i> Nueva operación</a>
       </div>
     </div>
     <div class="col-md-5 text-center hero-auto">
@@ -25,17 +25,19 @@
   ('vehiculos.listar',   'Vehículos',   'car-front',        c.vehiculos,   ''),
   ('clientes.listar',    'Clientes',    'people',           c.clientes,    ''),
   ('asesores.listar',    'Asesores',    'person-badge',     c.asesores,    ''),
-  ('operaciones.listar', 'Operaciones', 'arrow-left-right', c.operaciones, 'destacada'),
+  ('operaciones.listar', 'Operaciones', 'arrow-left-right', c.operaciones, 'acento'),
 ] %}
 <div class="row g-3">
   {% for endpoint, label, icon, n, extra in tarjetas %}
   <div class="col-6 col-md-4 col-lg">
     <a class="card-link-full" href="{{ url_for(endpoint) }}">
-      <div class="card card-tabla {{ extra }} h-100 aparecer" style="--retraso: {{ loop.index0 * 80 }}ms">
-        <div class="card-body">
-          <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
-          <div class="numero" data-contar="{{ n }}">{{ n }}</div>
-          <div class="small text-secondary">registros</div>
+      <div class="card card-tabla h-100 aparecer" style="--retraso: {{ loop.index0 * 80 }}ms">
+        <div class="card-body d-flex align-items-center gap-3">
+          <span class="icono-caja {{ extra }}"><i class="bi bi-{{ icon }}"></i></span>
+          <div>
+            <div class="numero" data-contar="{{ n }}">{{ n }}</div>
+            <div class="small text-secondary">{{ label }}</div>
+          </div>
         </div>
       </div>
     </a>
@@ -45,45 +47,57 @@
 
 <div class="row g-3 mt-1">
   <div class="col-md-4">
-    <div class="card h-100 aparecer"><div class="card-body">
-      <div class="text-secondary"><i class="bi bi-check-circle"></i> Vehículos disponibles</div>
-      <div class="fs-3 fw-semibold" data-contar="{{ c.disponibles }}">{{ c.disponibles }}</div>
+    <div class="card h-100 aparecer"><div class="card-body d-flex align-items-center gap-3">
+      <span class="icono-caja"><i class="bi bi-check2-circle"></i></span>
+      <div>
+        <div class="small text-secondary">Vehículos disponibles</div>
+        <div class="fs-3 fw-bold" data-contar="{{ c.disponibles }}">{{ c.disponibles }}</div>
+      </div>
     </div></div>
   </div>
   <div class="col-md-4">
-    <div class="card h-100 aparecer"><div class="card-body">
-      <div class="text-secondary"><i class="bi bi-box-arrow-in-down"></i> Total invertido en compras</div>
-      <div class="fs-3 fw-semibold" data-contar="{{ c.total_compras|int }}" data-pesos>{{ c.total_compras|pesos }}</div>
+    <div class="card h-100 aparecer"><div class="card-body d-flex align-items-center gap-3">
+      <span class="icono-caja acento"><i class="bi bi-box-arrow-in-down"></i></span>
+      <div>
+        <div class="small text-secondary">Total invertido en compras</div>
+        <div class="fs-3 fw-bold" data-contar="{{ c.total_compras|int }}" data-pesos>{{ c.total_compras|pesos }}</div>
+      </div>
     </div></div>
   </div>
   <div class="col-md-4">
-    <div class="card h-100 aparecer"><div class="card-body">
-      <div class="text-secondary"><i class="bi bi-box-arrow-up"></i> Total recibido por ventas</div>
-      <div class="fs-3 fw-semibold text-success" data-contar="{{ c.total_ventas|int }}" data-pesos>{{ c.total_ventas|pesos }}</div>
+    <div class="card h-100 aparecer"><div class="card-body d-flex align-items-center gap-3">
+      <span class="icono-caja exito"><i class="bi bi-graph-up-arrow"></i></span>
+      <div>
+        <div class="small text-secondary">Total recibido por ventas</div>
+        <div class="fs-3 fw-bold" data-contar="{{ c.total_ventas|int }}" data-pesos>{{ c.total_ventas|pesos }}</div>
+      </div>
     </div></div>
   </div>
 </div>
 
 <div class="row g-3 mt-1">
   <div class="col-lg-7">
-    <div class="card h-100 aparecer"><div class="card-body">
-      <h2 class="h6 text-secondary mb-3"><i class="bi bi-bar-chart"></i> Compras vs. ventas por mes</h2>
+    <div class="card h-100 aparecer"><div class="card-body p-4">
+      <h2 class="h6 fw-bold mb-3"><i class="bi bi-bar-chart-line text-secondary"></i> Compras vs. ventas por mes</h2>
       <canvas id="grafico" height="230" aria-label="Gráfico de compras y ventas por mes"></canvas>
     </div></div>
   </div>
   <div class="col-lg-5">
-    <div class="card h-100 aparecer"><div class="card-body">
-      <h2 class="h6 text-secondary mb-3"><i class="bi bi-clock-history"></i> Últimas operaciones</h2>
+    <div class="card h-100 aparecer"><div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h6 fw-bold mb-0"><i class="bi bi-clock-history text-secondary"></i> Últimas operaciones</h2>
+        <a href="{{ url_for('operaciones.listar') }}" class="small text-decoration-none">Ver todas <i class="bi bi-arrow-right"></i></a>
+      </div>
       <ul class="list-unstyled mb-0">
         {% for o in ultimas %}
         <li class="d-flex align-items-center gap-3 py-2 {{ 'border-top' if not loop.first }}">
           {{ dibujo.silueta(o.tipo, o.color, 'silueta silueta-mini') }}
           <div class="flex-grow-1 small">
-            <div class="fw-medium">{{ o.vehiculo }}</div>
+            <div class="fw-semibold">{{ o.vehiculo }}</div>
             <div class="text-secondary">{{ o.nombre_cliente }} · {{ o.fecha.strftime('%d/%m/%Y') }}</div>
           </div>
-          <div class="text-end small">
-            <span class="badge text-bg-{{ 'success' if o.tipo_operacion == 'Venta' else 'primary' }}">{{ o.tipo_operacion }}</span>
+          <div class="text-end small text-nowrap">
+            <span class="badge rounded-pill text-bg-{{ 'success' if o.tipo_operacion == 'Venta' else 'primary' }}">{{ o.tipo_operacion }}</span>
             <div class="fw-semibold">{{ o.valor|pesos }}</div>
           </div>
         </li>
@@ -101,25 +115,38 @@
 <script>
   // Gráfico de barras con los datos que envía Flask (si no hay internet, simplemente no se dibuja)
   const datos = {{ grafico|tojson }};
-  if (window.Chart) {
-    const nombresMes = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-    new Chart(document.getElementById('grafico'), {
+  const nombresMes = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  let grafico = null;
+
+  function dibujarGrafico() {
+    if (!window.Chart) return;
+    const oscuro = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    const texto = oscuro ? '#93a0b4' : '#6b7686';
+    const rejilla = oscuro ? 'rgba(255,255,255,.06)' : 'rgba(16,24,40,.06)';
+    if (grafico) grafico.destroy();
+    grafico = new Chart(document.getElementById('grafico'), {
       type: 'bar',
       data: {
         labels: datos.meses.map(m => nombresMes[parseInt(m.slice(5)) - 1] + ' ' + m.slice(0, 4)),
         datasets: [
-          { label: 'Compras', data: datos.compras, backgroundColor: '#2c6db3', borderRadius: 6 },
-          { label: 'Ventas',  data: datos.ventas,  backgroundColor: '#2e8b57', borderRadius: 6 },
+          { label: 'Compras', data: datos.compras, backgroundColor: '#2f5d8c', borderRadius: 8, maxBarThickness: 42 },
+          { label: 'Ventas',  data: datos.ventas,  backgroundColor: '#e4572e', borderRadius: 8, maxBarThickness: 42 },
         ],
       },
       options: {
         responsive: true,
         plugins: {
+          legend: { labels: { color: texto, usePointStyle: true, pointStyle: 'rectRounded' } },
           tooltip: { callbacks: { label: c => c.dataset.label + ': $ ' + c.parsed.y.toLocaleString('es-CO') } },
         },
-        scales: { y: { ticks: { callback: v => '$ ' + (v / 1000000) + ' M' } } },
+        scales: {
+          x: { ticks: { color: texto }, grid: { display: false } },
+          y: { ticks: { color: texto, callback: v => '$ ' + (v / 1000000) + ' M' }, grid: { color: rejilla } },
+        },
       },
     });
   }
+  dibujarGrafico();
+  document.addEventListener('tema-cambiado', dibujarGrafico);
 </script>
 {% endblock %}

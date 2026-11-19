@@ -58,8 +58,33 @@ function cambiarVista(vista) {
   aplicarFiltros();
 }
 
+// ---------------------------------------------------------- modo claro / oscuro
+function pintarBotonTema() {
+  const boton = document.getElementById('cambiar-tema');
+  if (!boton) return;
+  const oscuro = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+  boton.innerHTML = `<i class="bi bi-${oscuro ? 'sun' : 'moon-stars'}"></i>`;
+}
+
+function cambiarTema() {
+  const nuevo = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-bs-theme', nuevo);
+  try { localStorage.setItem('tema', nuevo); } catch (e) { /* sin almacenamiento */ }
+  pintarBotonTema();
+  document.dispatchEvent(new CustomEvent('tema-cambiado', { detail: nuevo }));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   animarContadores();
+
+  // Activa los tooltips de Bootstrap (por ejemplo, las observaciones de las operaciones)
+  if (window.bootstrap) {
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+  }
+
+  pintarBotonTema();
+  const botonTema = document.getElementById('cambiar-tema');
+  if (botonTema) botonTema.addEventListener('click', cambiarTema);
 
   document.querySelectorAll('[data-buscador], select[data-filtro]').forEach(el =>
     el.addEventListener('input', aplicarFiltros));

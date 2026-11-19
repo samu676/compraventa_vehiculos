@@ -10,7 +10,7 @@
       <thead>
         <tr>
           <th>ID</th><th>Fecha</th><th>Tipo</th><th>Vehículo</th><th>Cliente</th><th>Asesor</th>
-          <th class="num">Valor</th><th>Pago</th><th>Observaciones</th><th></th>
+          <th class="num">Valor</th><th>Pago</th><th></th>
         </tr>
       </thead>
       <tbody>
@@ -25,23 +25,28 @@
               <span class="badge text-bg-primary"><i class="bi bi-box-arrow-in-down"></i> Compra</span>
             {% endif %}
           </td>
-          <td>
+          <td class="celda-vehiculo">
             <div class="d-flex align-items-center gap-2">
               {{ dibujo.silueta(o.tipo, o.color, 'silueta silueta-mini') }}
-              <div>{{ o.vehiculo }}<br><span class="placa small">{{ o.placa }}</span></div>
+              <div><span class="fw-semibold">{{ o.vehiculo }}</span><br><span class="placa small">{{ o.placa }}</span></div>
             </div>
           </td>
-          <td>{{ o.nombre_cliente }}</td>
-          <td>{{ o.nombre_asesor }}</td>
+          <td class="celda-persona">{{ o.nombre_cliente }}</td>
+          <td class="celda-persona">{{ o.nombre_asesor }}</td>
           <td class="num fw-semibold">{{ o.valor|pesos }}</td>
-          <td>{{ o.forma_pago }}</td>
-          <td class="small text-secondary">{{ o.observaciones or '' }}</td>
+          <td class="text-nowrap">{{ o.forma_pago }}
+            {% if o.observaciones %}
+              <i class="bi bi-chat-left-text text-secondary ms-1" title="{{ o.observaciones }}"
+                 data-bs-toggle="tooltip" aria-label="Observaciones: {{ o.observaciones }}"></i>
+              <span class="visually-hidden">{{ o.observaciones }}</span>
+            {% endif %}
+          </td>
           <td>{{ m.acciones(url_for('operaciones.editar', id=o.id_operacion),
                             url_for('operaciones.eliminar', id=o.id_operacion),
                             'la operación #' ~ o.id_operacion) }}</td>
         </tr>
         {% else %}
-          {{ m.sin_registros(10) }}
+          {{ m.sin_registros(9) }}
         {% endfor %}
       </tbody>
     </table>
