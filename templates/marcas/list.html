@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Marcas{% endblock %}
+{% block content %}
+{{ m.encabezado('Marcas', 'award', url_for('marcas.crear'), items|length) }}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr><th>ID</th><th>Marca</th><th>País de origen</th><th class="num">Vehículos</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for ma in items %}
+        <tr>
+          <td>{{ ma.id_marca }}</td>
+          <td class="fw-medium">{{ ma.nombre_marca }}</td>
+          <td>{{ ma.pais_origen }}</td>
+          <td class="num"><span class="badge text-bg-light border">{{ ma.num_vehiculos }}</span></td>
+          <td>{{ m.acciones(url_for('marcas.editar', id=ma.id_marca),
+                            url_for('marcas.eliminar', id=ma.id_marca),
+                            'la marca ' ~ ma.nombre_marca) }}</td>
+        </tr>
+        {% else %}
+          {{ m.sin_registros(5) }}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

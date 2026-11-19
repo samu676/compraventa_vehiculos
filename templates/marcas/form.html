@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="nombre_marca" class="form-label">Marca *</label>
+        <input type="text" class="form-control" id="nombre_marca" name="nombre_marca"
+               maxlength="50" required value="{{ item.nombre_marca or '' }}">
+      </div>
+      <div class="col-md-6">
+        <label for="pais_origen" class="form-label">País de origen *</label>
+        <input type="text" class="form-control" id="pais_origen" name="pais_origen"
+               maxlength="50" required value="{{ item.pais_origen or '' }}">
+      </div>
+    </div>
+    {{ m.botones_form(url_for('marcas.listar')) }}
+  </form>
+</div></div>
+{% endblock %}

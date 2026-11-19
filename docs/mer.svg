@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 510" width="1140" height="510" font-family="Segoe UI, Arial, sans-serif" font-size="13">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g stroke="#1f3b4d" stroke-width="1.6" fill="none">
+<line x1="175" y1="130" x2="175" y2="210"/>
+<line x1="167" y1="140" x2="183" y2="140"/>
+<line x1="167" y1="146" x2="183" y2="146"/>
+<line x1="175" y1="195" x2="166" y2="210"/>
+<line x1="175" y1="195" x2="184" y2="210"/>
+<circle cx="175" cy="188" r="5" fill="#fff"/>
+<line x1="310" y1="300" x2="430" y2="300"/>
+<line x1="320" y1="292" x2="320" y2="308"/>
+<line x1="326" y1="292" x2="326" y2="308"/>
+<line x1="415" y1="300" x2="430" y2="291"/>
+<line x1="415" y1="300" x2="430" y2="309"/>
+<circle cx="408" cy="300" r="5" fill="#fff"/>
+<polyline points="830,115 770,115 770,250 700,250"/>
+<line x1="820" y1="107" x2="820" y2="123"/>
+<line x1="814" y1="107" x2="814" y2="123"/>
+<line x1="715" y1="250" x2="700" y2="241"/>
+<line x1="715" y1="250" x2="700" y2="259"/>
+<circle cx="722" cy="250" r="5" fill="#fff"/>
+<polyline points="830,400 770,400 770,350 700,350"/>
+<line x1="820" y1="392" x2="820" y2="408"/>
+<line x1="814" y1="392" x2="814" y2="408"/>
+<line x1="715" y1="350" x2="700" y2="341"/>
+<line x1="715" y1="350" x2="700" y2="359"/>
+<circle cx="722" cy="350" r="5" fill="#fff"/>
+</g>
+<text x="187" y="146" fill="#555" font-size="12">1</text>
+<text x="187" y="200" fill="#555" font-size="12">0..N</text>
+<text x="318" y="288" fill="#555" font-size="12">1</text>
+<text x="390" y="288" fill="#555" font-size="12">0..N</text>
+<text x="812" y="107" fill="#555" font-size="12">1</text>
+<text x="706" y="242" fill="#555" font-size="12">0..N</text>
+<text x="812" y="392" fill="#555" font-size="12">1</text>
+<text x="706" y="342" fill="#555" font-size="12">0..N</text>
+<text x="215" y="175" fill="#1f3b4d" font-style="italic" font-size="12">fabrica</text>
+<text x="328" y="318" fill="#1f3b4d" font-style="italic" font-size="12">participa en</text>
+<text x="778" y="185" fill="#1f3b4d" font-style="italic" font-size="12">realiza</text>
+<text x="778" y="380" fill="#1f3b4d" font-style="italic" font-size="12">gestiona</text>
+<rect x="40" y="30" width="270" height="100" rx="6" fill="#fff" stroke="#1f3b4d" stroke-width="1.6"/>
+<path d="M40,36 a6,6 0 0 1 6,-6 h258 a6,6 0 0 1 6,6 v28 h-270 z" fill="#1f3b4d"/>
+<text x="175.0" y="52" fill="#fff" font-weight="600" font-size="15" text-anchor="middle">marcas</text>
+<text x="50" y="79" fill="#b8860b" font-weight="700" font-size="11">PK</text>
+<text x="80" y="79" fill="#222" font-weight="600">id_marca</text>
+<text x="300" y="79" fill="#777" font-size="12" text-anchor="end">SERIAL</text>
+<rect x="41" y="86" width="268" height="22" fill="#f3f6f8"/>
+<text x="50" y="101" fill="#2e7d32" font-weight="700" font-size="11">UQ</text>
+<text x="80" y="101" fill="#222">nombre_marca</text>
+<text x="300" y="101" fill="#777" font-size="12" text-anchor="end">VARCHAR(50)</text>
+<text x="80" y="123" fill="#222">pais_origen</text>
+<text x="300" y="123" fill="#777" font-size="12" text-anchor="end">VARCHAR(50)</text>
+<rect x="40" y="210" width="270" height="254" rx="6" fill="#fff" stroke="#1f3b4d" stroke-width="1.6"/>
+<path d="M40,216 a6,6 0 0 1 6,-6 h258 a6,6 0 0 1 6,6 v28 h-270 z" fill="#1f3b4d"/>
+<text x="175.0" y="232" fill="#fff" font-weight="600" font-size="15" text-anchor="middle">vehiculos</text>
+<text x="50" y="259" fill="#b8860b" font-weight="700" font-size="11">PK</text>
+<text x="80" y="259" fill="#222" font-weight="600">id_vehiculo</text>
+<text x="300" y="259" fill="#777" font-size="12" text-anchor="end">SERIAL</text>
+<rect x="41" y="266" width="268" height="22" fill="#f3f6f8"/>
+<text x="50" y="281" fill="#c0392b" font-weight="700" font-size="11">FK</text>
+<text x="80" y="281" fill="#222">id_marca</text>
+<text x="300" y="281" fill="#777" font-size="12" text-anchor="end">INTEGER</text>
+<text x="80" y="303" fill="#222">linea</text>
+<text x="300" y="303" fill="#777" font-size="12" text-anchor="end">VARCHAR(60)</text>
+<rect x="41" y="310" width="268" height="22" fill="#f3f6f8"/>
+<text x="80" y="325" fill="#222">anio</text>
+<text x="300" y="325" fill="#777" font-size="12" text-anchor="end">INTEGER</text>
+<text x="50" y="347" fill="#2e7d32" font-weight="700" font-size="11">UQ</text>
+<text x="80" y="347" fill="#222">placa</text>
+<text x="300" y="347" fill="#777" font-size="12" text-anchor="end">VARCHAR(6)</text>
+<rect x="41" y="354" width="268" height="22" fill="#f3f6f8"/>
+<text x="80" y="369" fill="#222">tipo</text>
+<text x="300" y="369" fill="#777" font-size="12" text-anchor="end">VARCHAR(20)</text>
+<text x="80" y="391" fill="#222">color</text>
+<text x="300" y="391" fill="#777" font-size="12" text-anchor="end">VARCHAR(30)</text>
+<rect x="41" y="398" width="268" height="22" fill="#f3f6f8"/>
+<text x="80" y="413" fill="#222">kilometraje</text>
+<text x="300" y="413" fill="#777" font-size="12" text-anchor="end">INTEGER</text>
+<text x="80" y="435" fill="#222">precio_venta</text>
+<text x="300" y="435" fill="#777" font-size="12" text-anchor="end">NUMERIC(14,2)</text>
+<rect x="41" y="442" width="268" height="22" fill="#f3f6f8"/>
+<text x="80" y="457" fill="#222">estado</text>
+<text x="300" y="457" fill="#777" font-size="12" text-anchor="end">VARCHAR(15)</text>
+<rect x="430" y="180" width="270" height="232" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.6"/>
+<path d="M430,186 a6,6 0 0 1 6,-6 h258 a6,6 0 0 1 6,6 v28 h-270 z" fill="#c0392b"/>
+<text x="565.0" y="202" fill="#fff" font-weight="600" font-size="15" text-anchor="middle">operaciones</text>
+<text x="440" y="229" fill="#b8860b" font-weight="700" font-size="11">PK</text>
+<text x="470" y="229" fill="#222" font-weight="600">id_operacion</text>
+<text x="690" y="229" fill="#777" font-size="12" text-anchor="end">SERIAL</text>
+<rect x="431" y="236" width="268" height="22" fill="#f3f6f8"/>
+<text x="470" y="251" fill="#222">fecha</text>
+<text x="690" y="251" fill="#777" font-size="12" text-anchor="end">DATE</text>
+<text x="470" y="273" fill="#222">tipo_operacion</text>
+<text x="690" y="273" fill="#777" font-size="12" text-anchor="end">VARCHAR(10)</text>
+<rect x="431" y="280" width="268" height="22" fill="#f3f6f8"/>
+<text x="440" y="295" fill="#c0392b" font-weight="700" font-size="11">FK</text>
+<text x="470" y="295" fill="#222">id_vehiculo</text>
+<text x="690" y="295" fill="#777" font-size="12" text-anchor="end">INTEGER</text>
+<text x="440" y="317" fill="#c0392b" font-weight="700" font-size="11">FK</text>
+<text x="470" y="317" fill="#222">id_cliente</text>
+<text x="690" y="317" fill="#777" font-size="12" text-anchor="end">INTEGER</text>
+<rect x="431" y="324" width="268" height="22" fill="#f3f6f8"/>
+<text x="440" y="339" fill="#c0392b" font-weight="700" font-size="11">FK</text>
+<text x="470" y="339" fill="#222">id_asesor</text>
+<text x="690" y="339" fill="#777" font-size="12" text-anchor="end">INTEGER</text>
+<text x="470" y="361" fill="#222">valor</text>
+<text x="690" y="361" fill="#777" font-size="12" text-anchor="end">NUMERIC(14,2)</text>
+<rect x="431" y="368" width="268" height="22" fill="#f3f6f8"/>
+<text x="470" y="383" fill="#222">forma_pago</text>
+<text x="690" y="383" fill="#777" font-size="12" text-anchor="end">VARCHAR(15)</text>
+<text x="470" y="405" fill="#222">observaciones</text>
+<text x="690" y="405" fill="#777" font-size="12" text-anchor="end">VARCHAR(200)</text>
+<rect x="830" y="30" width="270" height="166" rx="6" fill="#fff" stroke="#1f3b4d" stroke-width="1.6"/>
+<path d="M830,36 a6,6 0 0 1 6,-6 h258 a6,6 0 0 1 6,6 v28 h-270 z" fill="#1f3b4d"/>
+<text x="965.0" y="52" fill="#fff" font-weight="600" font-size="15" text-anchor="middle">clientes</text>
+<text x="840" y="79" fill="#b8860b" font-weight="700" font-size="11">PK</text>
+<text x="870" y="79" fill="#222" font-weight="600">id_cliente</text>
+<text x="1090" y="79" fill="#777" font-size="12" text-anchor="end">SERIAL</text>
+<rect x="831" y="86" width="268" height="22" fill="#f3f6f8"/>
+<text x="840" y="101" fill="#2e7d32" font-weight="700" font-size="11">UQ</text>
+<text x="870" y="101" fill="#222">documento</text>
+<text x="1090" y="101" fill="#777" font-size="12" text-anchor="end">VARCHAR(15)</text>
+<text x="870" y="123" fill="#222">nombre_cliente</text>
+<text x="1090" y="123" fill="#777" font-size="12" text-anchor="end">VARCHAR(100)</text>
+<rect x="831" y="130" width="268" height="22" fill="#f3f6f8"/>
+<text x="870" y="145" fill="#222">telefono</text>
+<text x="1090" y="145" fill="#777" font-size="12" text-anchor="end">VARCHAR(15)</text>
+<text x="840" y="167" fill="#2e7d32" font-weight="700" font-size="11">UQ</text>
+<text x="870" y="167" fill="#222">email</text>
+<text x="1090" y="167" fill="#777" font-size="12" text-anchor="end">VARCHAR(120)</text>
+<rect x="831" y="174" width="268" height="22" fill="#f3f6f8"/>
+<text x="870" y="189" fill="#222">ciudad</text>
+<text x="1090" y="189" fill="#777" font-size="12" text-anchor="end">VARCHAR(60)</text>
+<rect x="830" y="330" width="270" height="144" rx="6" fill="#fff" stroke="#1f3b4d" stroke-width="1.6"/>
+<path d="M830,336 a6,6 0 0 1 6,-6 h258 a6,6 0 0 1 6,6 v28 h-270 z" fill="#1f3b4d"/>
+<text x="965.0" y="352" fill="#fff" font-weight="600" font-size="15" text-anchor="middle">asesores</text>
+<text x="840" y="379" fill="#b8860b" font-weight="700" font-size="11">PK</text>
+<text x="870" y="379" fill="#222" font-weight="600">id_asesor</text>
+<text x="1090" y="379" fill="#777" font-size="12" text-anchor="end">SERIAL</text>
+<rect x="831" y="386" width="268" height="22" fill="#f3f6f8"/>
+<text x="870" y="401" fill="#222">nombre_asesor</text>
+<text x="1090" y="401" fill="#777" font-size="12" text-anchor="end">VARCHAR(100)</text>
+<text x="870" y="423" fill="#222">telefono</text>
+<text x="1090" y="423" fill="#777" font-size="12" text-anchor="end">VARCHAR(15)</text>
+<rect x="831" y="430" width="268" height="22" fill="#f3f6f8"/>
+<text x="840" y="445" fill="#2e7d32" font-weight="700" font-size="11">UQ</text>
+<text x="870" y="445" fill="#222">email</text>
+<text x="1090" y="445" fill="#777" font-size="12" text-anchor="end">VARCHAR(120)</text>
+<text x="870" y="467" fill="#222">porcentaje_comision</text>
+<text x="1090" y="467" fill="#777" font-size="12" text-anchor="end">NUMERIC(4,2)</text>
+<text x="40" y="495" fill="#777" font-size="11">PK: llave primaria · FK: llave foránea · UQ: único · Notación pata de gallo: || = uno y solo uno, o&lt; = cero o muchos</text>
+</svg>

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label for="documento" class="form-label">Documento *</label>
+        <input type="text" class="form-control" id="documento" name="documento" inputmode="numeric"
+               maxlength="15" required value="{{ item.documento or '' }}">
+      </div>
+      <div class="col-md-8">
+        <label for="nombre_cliente" class="form-label">Nombre completo *</label>
+        <input type="text" class="form-control" id="nombre_cliente" name="nombre_cliente"
+               maxlength="100" required value="{{ item.nombre_cliente or '' }}">
+      </div>
+      <div class="col-md-4">
+        <label for="telefono" class="form-label">Teléfono *</label>
+        <input type="tel" class="form-control" id="telefono" name="telefono"
+               maxlength="15" required value="{{ item.telefono or '' }}">
+      </div>
+      <div class="col-md-4">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email"
+               maxlength="120" value="{{ item.email or '' }}">
+      </div>
+      <div class="col-md-4">
+        <label for="ciudad" class="form-label">Ciudad *</label>
+        <input type="text" class="form-control" id="ciudad" name="ciudad"
+               maxlength="60" required value="{{ item.ciudad or '' }}">
+      </div>
+    </div>
+    {{ m.botones_form(url_for('clientes.listar')) }}
+  </form>
+</div></div>
+{% endblock %}

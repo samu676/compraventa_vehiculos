@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Asesores{% endblock %}
+{% block content %}
+{{ m.encabezado('Asesores', 'person-badge', url_for('asesores.crear'), items|length) }}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>ID</th><th>Asesor</th><th>Teléfono</th><th>Email</th><th class="num">Comisión</th>
+          <th class="num">Operaciones</th><th class="num">Total negociado</th>
+          <th class="num">Comisión ganada</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in items %}
+        <tr>
+          <td>{{ a.id_asesor }}</td>
+          <td class="fw-medium">{{ a.nombre_asesor }}</td>
+          <td>{{ a.telefono }}</td>
+          <td>{{ a.email }}</td>
+          <td class="num">{{ '%.2f'|format(a.porcentaje_comision) }} %</td>
+          <td class="num">{{ a.num_operaciones }}</td>
+          <td class="num">{{ a.total_negociado|pesos }}</td>
+          <td class="num fw-semibold">{{ a.comision|pesos }}</td>
+          <td>{{ m.acciones(url_for('asesores.editar', id=a.id_asesor),
+                            url_for('asesores.eliminar', id=a.id_asesor),
+                            'el asesor ' ~ a.nombre_asesor) }}</td>
+        </tr>
+        {% else %}
+          {{ m.sin_registros(9) }}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<p class="small text-secondary mt-2">La comisión ganada se calcula como total negociado × porcentaje de comisión.</p>
+{% endblock %}

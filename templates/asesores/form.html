@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-3">
+      <div class="col-md-8">
+        <label for="nombre_asesor" class="form-label">Nombre completo *</label>
+        <input type="text" class="form-control" id="nombre_asesor" name="nombre_asesor"
+               maxlength="100" required value="{{ item.nombre_asesor or '' }}">
+      </div>
+      <div class="col-md-4">
+        <label for="telefono" class="form-label">Teléfono *</label>
+        <input type="tel" class="form-control" id="telefono" name="telefono"
+               maxlength="15" required value="{{ item.telefono or '' }}">
+      </div>
+      <div class="col-md-8">
+        <label for="email" class="form-label">Email *</label>
+        <input type="email" class="form-control" id="email" name="email"
+               maxlength="120" required value="{{ item.email or '' }}">
+      </div>
+      <div class="col-md-4">
+        <label for="porcentaje_comision" class="form-label">Comisión (%) *</label>
+        <input type="number" class="form-control" id="porcentaje_comision" name="porcentaje_comision"
+               min="0" max="10" step="0.01" required
+               value="{{ item.porcentaje_comision if item.porcentaje_comision is not none }}">
+        <div class="form-text">Entre 0 y 10. Ej: 1.5</div>
+      </div>
+    </div>
+    {{ m.botones_form(url_for('asesores.listar')) }}
+  </form>
+</div></div>
+{% endblock %}

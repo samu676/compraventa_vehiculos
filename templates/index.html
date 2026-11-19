@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+<div class="hero rounded-3 p-4 mb-4 text-white">
+  <h1 class="h3 mb-1"><i class="bi bi-car-front-fill"></i> CompraVenta de Vehículos</h1>
+  <p class="mb-0 opacity-75">Gestión del inventario, los clientes, los asesores y las compras y ventas
+    del concesionario.</p>
+</div>
+
+{% set tarjetas = [
+  ('marcas.listar',      'Marcas',      'award',            c.marcas,      ''),
+  ('vehiculos.listar',   'Vehículos',   'car-front',        c.vehiculos,   ''),
+  ('clientes.listar',    'Clientes',    'people',           c.clientes,    ''),
+  ('asesores.listar',    'Asesores',    'person-badge',     c.asesores,    ''),
+  ('operaciones.listar', 'Operaciones', 'arrow-left-right', c.operaciones, 'destacada'),
+] %}
+<div class="row g-3">
+  {% for endpoint, label, icon, n, extra in tarjetas %}
+  <div class="col-6 col-md-4 col-lg">
+    <a class="card-link-full" href="{{ url_for(endpoint) }}">
+      <div class="card card-tabla {{ extra }} h-100">
+        <div class="card-body">
+          <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
+          <div class="numero">{{ n }}</div>
+          <div class="small text-secondary">registros</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-md-4">
+    <div class="card h-100"><div class="card-body">
+      <div class="text-secondary"><i class="bi bi-check-circle"></i> Vehículos disponibles</div>
+      <div class="fs-3 fw-semibold">{{ c.disponibles }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100"><div class="card-body">
+      <div class="text-secondary"><i class="bi bi-box-arrow-in-down"></i> Total invertido en compras</div>
+      <div class="fs-3 fw-semibold">{{ c.total_compras|pesos }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100"><div class="card-body">
+      <div class="text-secondary"><i class="bi bi-box-arrow-up"></i> Total recibido por ventas</div>
+      <div class="fs-3 fw-semibold text-success">{{ c.total_ventas|pesos }}</div>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

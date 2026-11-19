@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label for="fecha" class="form-label">Fecha *</label>
+        <input type="date" class="form-control" id="fecha" name="fecha" required
+               value="{{ item.fecha or '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label d-block">Tipo de operación *</label>
+        {% for t in tipos %}
+        <div class="form-check form-check-inline mt-1">
+          <input class="form-check-input" type="radio" name="tipo_operacion" id="tipo_{{ t }}"
+                 value="{{ t }}" {{ 'checked' if item.tipo_operacion == t }}>
+          <label class="form-check-label" for="tipo_{{ t }}">{{ t }}</label>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="col-md-6">
+        <label for="id_vehiculo" class="form-label">Vehículo *</label>
+        <select class="form-select" id="id_vehiculo" name="id_vehiculo" required>
+          <option value="">Seleccione…</option>
+          {% for ve in vehiculos %}
+            <option value="{{ ve.id_vehiculo }}" data-precio="{{ ve.precio_venta }}"
+              {{ 'selected' if item.id_vehiculo|string == ve.id_vehiculo|string }}>
+              {{ ve.nombre_marca }} {{ ve.linea }} {{ ve.anio }} · {{ ve.placa }} ({{ ve.estado }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="id_cliente" class="form-label">Cliente *</label>
+        <select class="form-select" id="id_cliente" name="id_cliente" required>
+          <option value="">Seleccione…</option>
+          {% for c in clientes %}
+            <option value="{{ c.id_cliente }}"
+              {{ 'selected' if item.id_cliente|string == c.id_cliente|string }}>
+              {{ c.nombre_cliente }} (CC {{ c.documento }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="id_asesor" class="form-label">Asesor *</label>
+        <select class="form-select" id="id_asesor" name="id_asesor" required>
+          <option value="">Seleccione…</option>
+          {% for a in asesores %}
+            <option value="{{ a.id_asesor }}"
+              {{ 'selected' if item.id_asesor|string == a.id_asesor|string }}>{{ a.nombre_asesor }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="valor" class="form-label">Valor acordado (COP) *</label>
+        <input type="number" class="form-control" id="valor" name="valor" min="1" step="0.01" required
+               value="{{ item.valor if item.valor is not none }}">
+        <div class="form-text">En una venta se propone el precio de venta del vehículo.</div>
+      </div>
+      <div class="col-md-3">
+        <label for="forma_pago" class="form-label">Forma de pago *</label>
+        <select class="form-select" id="forma_pago" name="forma_pago" required>
+          {% for f in formas_pago %}
+            <option value="{{ f }}" {{ 'selected' if item.forma_pago == f }}>{{ f }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-5">
+        <label for="observaciones" class="form-label">Observaciones</label>
+        <input type="text" class="form-control" id="observaciones" name="observaciones"
+               maxlength="200" value="{{ item.observaciones or '' }}">
+      </div>
+    </div>
+    {{ m.botones_form(url_for('operaciones.listar')) }}
+  </form>
+</div></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // En una venta, al elegir el vehículo se propone su precio de venta (si el valor está vacío)
+  const vehiculo = document.getElementById('id_vehiculo');
+  const valor = document.getElementById('valor');
+  vehiculo.addEventListener('change', () => {
+    const esVenta = document.getElementById('tipo_Venta').checked;
+    const opcion = vehiculo.selectedOptions[0];
+    if (esVenta && opcion && opcion.dataset.precio && !valor.value) {
+      valor.value = opcion.dataset.precio;
+    }
+  });
+</script>
+{% endblock %}

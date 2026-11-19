@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label for="id_marca" class="form-label">Marca *</label>
+        <select class="form-select" id="id_marca" name="id_marca" required>
+          <option value="">Seleccione…</option>
+          {% for ma in marcas %}
+            <option value="{{ ma.id_marca }}"
+              {{ 'selected' if item.id_marca|string == ma.id_marca|string }}>{{ ma.nombre_marca }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-5">
+        <label for="linea" class="form-label">Línea / modelo *</label>
+        <input type="text" class="form-control" id="linea" name="linea" maxlength="60" required
+               placeholder="Ej: Onix LTZ" value="{{ item.linea or '' }}">
+      </div>
+      <div class="col-md-3">
+        <label for="anio" class="form-label">Año *</label>
+        <input type="number" class="form-control" id="anio" name="anio" required
+               min="{{ anio_min }}" max="{{ anio_max }}" step="1"
+               value="{{ item.anio if item.anio is not none }}">
+      </div>
+      <div class="col-md-3">
+        <label for="placa" class="form-label">Placa *</label>
+        <input type="text" class="form-control text-uppercase" id="placa" name="placa"
+               maxlength="6" required placeholder="ABC123" value="{{ item.placa or '' }}">
+        <div class="form-text">ABC123 (carro) o ABC12D (moto).</div>
+      </div>
+      <div class="col-md-3">
+        <label for="tipo" class="form-label">Tipo *</label>
+        <select class="form-select" id="tipo" name="tipo" required>
+          <option value="">Seleccione…</option>
+          {% for t in tipos %}
+            <option value="{{ t }}" {{ 'selected' if item.tipo == t }}>{{ t }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="color" class="form-label">Color *</label>
+        <input type="text" class="form-control" id="color" name="color" maxlength="30" required
+               value="{{ item.color or '' }}">
+      </div>
+      <div class="col-md-3">
+        <label for="kilometraje" class="form-label">Kilometraje *</label>
+        <input type="number" class="form-control" id="kilometraje" name="kilometraje"
+               min="0" step="1" required value="{{ item.kilometraje if item.kilometraje is not none }}">
+      </div>
+      <div class="col-md-5">
+        <label for="precio_venta" class="form-label">Precio de venta (COP) *</label>
+        <input type="number" class="form-control" id="precio_venta" name="precio_venta"
+               min="1" step="0.01" required
+               value="{{ item.precio_venta if item.precio_venta is not none }}">
+      </div>
+      <div class="col-md-4">
+        <label for="estado" class="form-label">Estado *</label>
+        <select class="form-select" id="estado" name="estado" required>
+          {% for e in estados %}
+            <option value="{{ e }}" {{ 'selected' if item.estado == e }}>{{ e }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    {{ m.botones_form(url_for('vehiculos.listar')) }}
+  </form>
+</div></div>
+{% endblock %}

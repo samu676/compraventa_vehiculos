@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+{{ m.encabezado('Clientes', 'people', url_for('clientes.crear'), items|length) }}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>ID</th><th>Documento</th><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Ciudad</th>
+          <th class="num" title="Vehículos que el cliente le vendió al concesionario">Nos vendió</th>
+          <th class="num" title="Vehículos que el cliente le compró al concesionario">Nos compró</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cl in items %}
+        <tr>
+          <td>{{ cl.id_cliente }}</td>
+          <td>{{ cl.documento }}</td>
+          <td class="fw-medium">{{ cl.nombre_cliente }}</td>
+          <td>{{ cl.telefono }}</td>
+          <td>{{ cl.email or '—' }}</td>
+          <td>{{ cl.ciudad }}</td>
+          <td class="num">{{ cl.num_vendidos }}</td>
+          <td class="num">{{ cl.num_comprados }}</td>
+          <td>{{ m.acciones(url_for('clientes.editar', id=cl.id_cliente),
+                            url_for('clientes.eliminar', id=cl.id_cliente),
+                            'el cliente ' ~ cl.nombre_cliente) }}</td>
+        </tr>
+        {% else %}
+          {{ m.sin_registros(9) }}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Operaciones{% endblock %}
+{% block content %}
+{{ m.encabezado('Operaciones de compra y venta', 'arrow-left-right', url_for('operaciones.crear'), items|length) }}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>ID</th><th>Fecha</th><th>Tipo</th><th>Vehículo</th><th>Cliente</th><th>Asesor</th>
+          <th class="num">Valor</th><th>Pago</th><th>Observaciones</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in items %}
+        <tr>
+          <td>{{ o.id_operacion }}</td>
+          <td class="text-nowrap">{{ o.fecha.strftime('%d/%m/%Y') }}</td>
+          <td>
+            {% if o.tipo_operacion == 'Venta' %}
+              <span class="badge text-bg-success"><i class="bi bi-box-arrow-up"></i> Venta</span>
+            {% else %}
+              <span class="badge text-bg-primary"><i class="bi bi-box-arrow-in-down"></i> Compra</span>
+            {% endif %}
+          </td>
+          <td>{{ o.vehiculo }} <span class="placa small">{{ o.placa }}</span></td>
+          <td>{{ o.nombre_cliente }}</td>
+          <td>{{ o.nombre_asesor }}</td>
+          <td class="num fw-semibold">{{ o.valor|pesos }}</td>
+          <td>{{ o.forma_pago }}</td>
+          <td class="small text-secondary">{{ o.observaciones or '' }}</td>
+          <td>{{ m.acciones(url_for('operaciones.editar', id=o.id_operacion),
+                            url_for('operaciones.eliminar', id=o.id_operacion),
+                            'la operación #' ~ o.id_operacion) }}</td>
+        </tr>
+        {% else %}
+          {{ m.sin_registros(10) }}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<p class="small text-secondary mt-2"><b>Compra:</b> el concesionario le compra el vehículo al cliente.
+  <b>Venta:</b> el concesionario le vende el vehículo al cliente.</p>
+{% endblock %}
