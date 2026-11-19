@@ -29,9 +29,9 @@
   {% for ve in items %}
   <div class="col-sm-6 col-lg-4 col-xl-3" data-buscable data-estado="{{ ve.estado }}" data-tipo="{{ ve.tipo }}">
     <div class="card h-100 tarjeta-vehiculo aparecer" style="--retraso: {{ loop.index0 * 50 }}ms">
-      <div class="tarjeta-imagen">
+      <div class="tarjeta-imagen {{ 'con-foto' if ve.foto }}">
         <span class="badge text-bg-{{ color_estado.get(ve.estado, 'light') }} estado">{{ ve.estado }}</span>
-        {{ dibujo.silueta(ve.tipo, ve.color) }}
+        {{ dibujo.imagen(ve) }}
       </div>
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start gap-2">
@@ -74,7 +74,7 @@
       <tbody>
         {% for ve in items %}
         <tr data-buscable data-estado="{{ ve.estado }}" data-tipo="{{ ve.tipo }}">
-          <td>{{ dibujo.silueta(ve.tipo, ve.color, 'silueta silueta-mini') }}</td>
+          <td>{{ dibujo.imagen(ve, 'mini') }}</td>
           <td>{{ ve.id_vehiculo }}</td>
           <td><span class="placa">{{ ve.placa }}</span></td>
           <td class="fw-medium">{{ ve.nombre_marca }}</td>

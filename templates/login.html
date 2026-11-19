@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión{% endblock %}
+{% block content %}
+<div class="row justify-content-center py-lg-4">
+  <div class="col-sm-10 col-md-7 col-lg-5 col-xl-4">
+    <div class="card aparecer">
+      <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+          <span class="logo mb-3" style="width:3.25rem;height:3.25rem;font-size:1.6rem"><i class="bi bi-person-lock"></i></span>
+          <h1 class="h4 fw-bold mb-1">Acceso administrador</h1>
+          <p class="text-secondary small mb-0">Inicia sesión para gestionar el inventario y las operaciones.</p>
+        </div>
+        <form method="post" novalidate>
+          <div class="mb-3">
+            <label for="usuario" class="form-label">Usuario</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control" id="usuario" name="usuario" required autofocus
+                     autocomplete="username" value="{{ request.form.usuario or '' }}">
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="clave" class="form-label">Contraseña</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-key"></i></span>
+              <input type="password" class="form-control" id="clave" name="clave" required
+                     autocomplete="current-password">
+              <button type="button" class="btn btn-outline-primary" id="ver-clave"
+                      title="Mostrar u ocultar la contraseña" aria-label="Mostrar u ocultar la contraseña">
+                <i class="bi bi-eye"></i></button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-box-arrow-in-right"></i> Entrar</button>
+        </form>
+        <div class="text-center mt-4">
+          <a href="{{ url_for('catalogo') }}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Volver al catálogo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const clave = document.getElementById('clave');
+  document.getElementById('ver-clave').addEventListener('click', e => {
+    const ver = clave.type === 'password';
+    clave.type = ver ? 'text' : 'password';
+    e.currentTarget.innerHTML = `<i class="bi bi-eye${ver ? '-slash' : ''}"></i>`;
+  });
+</script>
+{% endblock %}

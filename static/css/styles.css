@@ -88,6 +88,7 @@ h1, h2, h3, .h1, .h2, .h3, .navbar-brand { letter-spacing: -.02em; }
   border-radius: 999px; width: 2.3rem; height: 2.3rem; padding: 0;
 }
 .btn-tema:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+.btn-tema { display: inline-grid; place-items: center; }
 
 /* ---------- Tarjetas y superficies ---------- */
 .card {
@@ -238,6 +239,23 @@ td.num, th.num { text-align: right; white-space: nowrap; }
 .silueta-mini { width: 64px; flex-shrink: 0; }
 .silueta .carroceria { transition: fill .3s; }
 
+/* ---------- Fotos de vehículos ---------- */
+.foto-vehiculo { display: block; width: 100%; object-fit: cover; }
+.foto-grande { aspect-ratio: 16 / 10; }
+.foto-mini { width: 64px; height: 42px; border-radius: .45rem; flex-shrink: 0; }
+.tarjeta-imagen.con-foto { padding: 0; overflow: hidden; }
+.tarjeta-imagen.con-foto .foto-vehiculo { transition: transform .45s ease; }
+.tarjeta-vehiculo:hover .tarjeta-imagen.con-foto .foto-vehiculo { transform: scale(1.06); }
+.tarjeta-imagen.con-foto .estado { z-index: 1; }
+
+/* Botón de sesión en la barra de navegación */
+.btn-sesion {
+  border-radius: 999px; padding: .4rem 1rem;
+  background: rgba(255, 255, 255, .1); color: #fff;
+  border: 1px solid rgba(255, 255, 255, .2);
+}
+.btn-sesion:hover { background: rgba(255, 255, 255, .2); color: #fff; }
+
 /* ---------- Catálogo ---------- */
 .tarjeta-vehiculo { transition: transform .25s, box-shadow .25s; overflow: hidden; }
 .tarjeta-vehiculo:hover { transform: translateY(-5px); box-shadow: var(--cv-sombra-alta); }
@@ -248,7 +266,7 @@ td.num, th.num { text-align: right; white-space: nowrap; }
 .precio { color: var(--cv-primario); font-weight: 700; }
 .datos-vehiculo span { white-space: nowrap; }
 
-.buscador { min-width: 230px; }
+.buscador { min-width: 230px; width: auto; }
 .vista-previa { background: var(--cv-fondo-imagen); border-radius: var(--cv-radio); padding: 1.25rem; }
 
 /* Placa estilo colombiano (fondo amarillo) */

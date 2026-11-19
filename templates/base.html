@@ -30,7 +30,8 @@
 ] %}
 <nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url_for('inicio') }}">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2"
+       href="{{ url_for('inicio') if session.admin else url_for('catalogo') }}">
       <span class="logo"><i class="bi bi-car-front-fill"></i></span> CompraVenta
     </a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
@@ -39,20 +40,40 @@
     </button>
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto gap-lg-1 my-2 my-lg-0">
-        {% for endpoint, label, icon in menu %}
-          {% set activo = request.blueprint and endpoint.startswith(request.blueprint ~ '.') %}
+        {% if session.admin %}
+          {# El administrador ve todas las tablas #}
+          {% for endpoint, label, icon in menu %}
+            {% set activo = request.blueprint and endpoint.startswith(request.blueprint ~ '.') %}
+            <li class="nav-item">
+              <a class="nav-link {{ 'active' if activo }}" href="{{ url_for(endpoint) }}"
+                 {{ 'aria-current="page"'|safe if activo }}>
+                <i class="bi bi-{{ icon }}"></i> {{ label }}
+              </a>
+            </li>
+          {% endfor %}
+        {% else %}
+          {# Los visitantes solo ven el catálogo #}
           <li class="nav-item">
-            <a class="nav-link {{ 'active' if activo }}" href="{{ url_for(endpoint) }}"
-               {{ 'aria-current="page"'|safe if activo }}>
-              <i class="bi bi-{{ icon }}"></i> {{ label }}
-            </a>
+            <a class="nav-link {{ 'active' if request.endpoint == 'catalogo' }}" href="{{ url_for('catalogo') }}">
+              <i class="bi bi-grid-3x2-gap"></i> Catálogo</a>
           </li>
-        {% endfor %}
+        {% endif %}
       </ul>
-      <button type="button" class="btn btn-tema ms-lg-3 mb-2 mb-lg-0" id="cambiar-tema"
-              title="Cambiar entre modo claro y oscuro" aria-label="Cambiar entre modo claro y oscuro">
-        <i class="bi bi-moon-stars"></i>
-      </button>
+      <div class="d-flex align-items-center gap-2 ms-lg-3 mb-2 mb-lg-0">
+        <button type="button" class="btn btn-tema" id="cambiar-tema"
+                title="Cambiar entre modo claro y oscuro" aria-label="Cambiar entre modo claro y oscuro">
+          <i class="bi bi-moon-stars"></i>
+        </button>
+        {% if session.admin %}
+          <a href="{{ url_for('catalogo') }}" class="btn btn-tema" title="Ver catálogo público"
+             aria-label="Ver catálogo público"><i class="bi bi-eye"></i></a>
+          <form method="post" action="{{ url_for('auth.logout') }}" class="m-0">
+            <button type="submit" class="btn btn-sesion"><i class="bi bi-box-arrow-right"></i> Salir</button>
+          </form>
+        {% elif request.endpoint != 'auth.login' %}
+          <a href="{{ url_for('auth.login') }}" class="btn btn-sesion"><i class="bi bi-person-lock"></i> Iniciar sesión</a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </nav>

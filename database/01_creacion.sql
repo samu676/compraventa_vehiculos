@@ -40,6 +40,7 @@ CREATE TABLE vehiculos (
     precio_venta NUMERIC(14,2) NOT NULL CHECK (precio_venta > 0),
     estado       VARCHAR(15)   NOT NULL DEFAULT 'Disponible'
         CHECK (estado IN ('Disponible', 'Reservado', 'Vendido')),
+    foto         VARCHAR(200),                           -- archivo dentro de static/fotos/ (opcional)
     CONSTRAINT fk_vehiculos_marca
         FOREIGN KEY (id_marca) REFERENCES marcas (id_marca)
         ON UPDATE CASCADE ON DELETE RESTRICT

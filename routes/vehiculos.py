@@ -1,5 +1,9 @@
-"""CRUD de la tabla vehiculos (FK a marcas)."""
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+"""CRUD de la tabla vehiculos (FK a marcas), con foto opcional."""
+import uuid
+from pathlib import Path
+
+from flask import (Blueprint, abort, current_app, flash, redirect, render_template, request,
+                   url_for)
 
 import validators as v
 from db import DatabaseError, error_message, execute, query
@@ -9,6 +13,33 @@ bp = Blueprint("vehiculos", __name__, url_prefix="/vehiculos")
 TIPOS = ["Automóvil", "SUV", "Camioneta", "Motocicleta"]
 ESTADOS = ["Disponible", "Reservado", "Vendido"]
 ANIO_MIN, ANIO_MAX = 1980, 2027
+
+# Fotos: se guardan en static/fotos/subidas/ con un nombre aleatorio
+EXTENSIONES = {".jpg", ".jpeg", ".png", ".webp"}
+
+
+def _es_imagen(cabecera):
+    """Revisa los primeros bytes del archivo (no basta con la extensión)."""
+    return (cabecera.startswith(b"\xff\xd8\xff")                         # JPG
+            or cabecera.startswith(b"\x89PNG")                          # PNG
+            or (cabecera[:4] == b"RIFF" and cabecera[8:12] == b"WEBP"))  # WEBP
+
+
+def _guardar_foto(archivo, errores):
+    """Guarda la foto subida y devuelve su ruta relativa, o None si no se subió nada."""
+    if not archivo or not archivo.filename:
+        return None
+    extension = Path(archivo.filename).suffix.lower()
+    cabecera = archivo.stream.read(12)
+    archivo.stream.seek(0)
+    if extension not in EXTENSIONES or not _es_imagen(cabecera):
+        errores.append("La foto debe ser una imagen JPG, PNG o WEBP.")
+        return None
+    nombre = f"subidas/{uuid.uuid4().hex}{extension}"
+    destino = Path(current_app.static_folder) / "fotos" / nombre
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    archivo.save(destino)
+    return nombre
 
 
 def _leer_formulario(form):
@@ -56,11 +87,14 @@ def crear():
         item = request.form.to_dict()
         datos, errores = _leer_formulario(request.form)
         if not errores:
+            datos["foto"] = _guardar_foto(request.files.get("foto"), errores)
+        if not errores:
             try:
                 execute("""INSERT INTO vehiculos (id_marca, linea, anio, placa, tipo, color,
-                                                  kilometraje, precio_venta, estado)
+                                                  kilometraje, precio_venta, estado, foto)
                            VALUES (%(id_marca)s, %(linea)s, %(anio)s, %(placa)s, %(tipo)s,
-                                   %(color)s, %(kilometraje)s, %(precio_venta)s, %(estado)s)""",
+                                   %(color)s, %(kilometraje)s, %(precio_venta)s, %(estado)s,
+                                   %(foto)s)""",
                         datos)
                 flash("Vehículo creado correctamente.", "success")
                 return redirect(url_for(".listar"))
@@ -77,8 +111,17 @@ def editar(id):
     if item is None:
         abort(404)
     if request.method == "POST":
+        foto_actual = item["foto"]
         item = {**item, **request.form.to_dict()}
         datos, errores = _leer_formulario(request.form)
+        if not errores:
+            nueva = _guardar_foto(request.files.get("foto"), errores)
+            if nueva:
+                datos["foto"] = nueva
+            elif request.form.get("quitar_foto"):
+                datos["foto"] = None
+            else:
+                datos["foto"] = foto_actual
         if not errores:
             try:
                 execute("""UPDATE vehiculos
@@ -90,7 +133,8 @@ def editar(id):
                                   color        = %(color)s,
                                   kilometraje  = %(kilometraje)s,
                                   precio_venta = %(precio_venta)s,
-                                  estado       = %(estado)s
+                                  estado       = %(estado)s,
+                                  foto         = %(foto)s
                             WHERE id_vehiculo = %(id)s""",
                         {**datos, "id": id})
                 flash("Vehículo actualizado correctamente.", "success")

@@ -5,6 +5,9 @@ así que los 10 registros originales de cada tabla no se modifican.
 
 Ejecutar con:  python -m pytest -v
 """
+import io
+from pathlib import Path
+
 import psycopg2
 import pytest
 
@@ -13,13 +16,30 @@ from config import Config
 
 PREFIJO = "ZZ_TEST_"
 TABLAS = ["marcas", "vehiculos", "clientes", "asesores", "operaciones"]
+CLAVE_PRUEBA = "clave-de-prueba"
+
+
+def _app():
+    app = create_app()
+    app.config["TESTING"] = True
+    app.config["ADMIN_USUARIO"] = "admin"
+    app.config["ADMIN_CLAVE"] = CLAVE_PRUEBA
+    return app
 
 
 @pytest.fixture()
 def client():
-    app = create_app()
-    app.config["TESTING"] = True
-    with app.test_client() as c:
+    """Cliente con la sesión de administrador ya iniciada."""
+    with _app().test_client() as c:
+        with c.session_transaction() as s:
+            s["admin"] = "admin"
+        yield c
+
+
+@pytest.fixture()
+def anonimo():
+    """Cliente de un visitante que no ha iniciado sesión."""
+    with _app().test_client() as c:
         yield c
 
 
@@ -40,7 +60,7 @@ def contar(tabla):
 
 # ---------------------------------------------------------------- páginas
 
-@pytest.mark.parametrize("ruta", ["/"]
+@pytest.mark.parametrize("ruta", ["/", "/panel"]
                          + [f"/{t}/" for t in TABLAS]
                          + [f"/{t}/nuevo" for t in TABLAS]
                          + [f"/{t}/1/editar" for t in TABLAS])
@@ -250,6 +270,81 @@ def test_operacion_con_vehiculo_inexistente(client):
 def test_eliminar_inexistente(client):
     r = client.post("/operaciones/999999/eliminar", follow_redirects=True)
     assert "no existe" in r.get_data(as_text=True)
+
+
+# ---------------------------------------------------------------- inicio de sesión
+
+@pytest.mark.parametrize("ruta", ["/panel", "/marcas/", "/vehiculos/nuevo", "/operaciones/1/editar"])
+def test_visitante_no_puede_entrar_a_la_administracion(anonimo, ruta):
+    r = anonimo.get(ruta)
+    assert r.status_code == 302 and "/login" in r.headers["Location"]
+
+
+def test_visitante_no_puede_eliminar(anonimo):
+    r = anonimo.post("/marcas/10/eliminar")
+    assert r.status_code == 302 and "/login" in r.headers["Location"]
+    assert sql("SELECT COUNT(*) FROM marcas WHERE id_marca=10")[0] == 1
+
+
+def test_login_incorrecto(anonimo):
+    r = anonimo.post("/login", data={"usuario": "admin", "clave": "mala"})
+    assert "incorrectos" in r.get_data(as_text=True)
+    assert anonimo.get("/panel").status_code == 302
+
+
+def test_login_correcto_y_salir(anonimo):
+    r = anonimo.post("/login?next=/clientes/", data={"usuario": "admin", "clave": CLAVE_PRUEBA})
+    assert r.status_code == 302 and r.headers["Location"].endswith("/clientes/")
+    assert anonimo.get("/panel").status_code == 200
+    anonimo.post("/logout")
+    assert anonimo.get("/panel").status_code == 302
+
+
+def test_login_no_redirige_a_otro_sitio(anonimo):
+    r = anonimo.post("/login?next=//sitio-malo.com", data={"usuario": "admin", "clave": CLAVE_PRUEBA})
+    assert r.headers["Location"].endswith("/panel")
+
+
+def test_catalogo_publico(anonimo):
+    html = anonimo.get("/").get_data(as_text=True)
+    assert "Onix LTZ" in html                  # disponible
+    assert "Picanto Vibrant" in html           # reservado
+    assert "Duster Intens" not in html         # vendido: no se muestra
+    assert "/editar" not in html and "/eliminar" not in html
+    assert "fotos/jkl482.jpg" in html
+
+
+# ---------------------------------------------------------------- fotos
+
+PNG_MINIMO = b"\x89PNG\r\n\x1a\n" + b"\x00" * 32
+
+
+def test_subir_y_quitar_foto(client):
+    datos = {**VEHICULO, "placa": "ZZF101", "linea": PREFIJO + "Foto",
+             "foto": (io.BytesIO(PNG_MINIMO), "auto.png")}
+    r = client.post("/vehiculos/nuevo", data=datos, content_type="multipart/form-data",
+                    follow_redirects=True)
+    assert "Vehículo creado" in r.get_data(as_text=True)
+    id_, foto = sql("SELECT id_vehiculo, foto FROM vehiculos WHERE placa='ZZF101'")
+    archivo = Path(client.application.static_folder) / "fotos" / foto
+    try:
+        assert foto.startswith("subidas/") and foto.endswith(".png") and archivo.exists()
+        # editar sin subir otra foto la conserva; marcar "quitar" la elimina
+        client.post(f"/vehiculos/{id_}/editar", data={**VEHICULO, "placa": "ZZF101"})
+        assert sql("SELECT foto FROM vehiculos WHERE id_vehiculo=%s", (id_,))[0] == foto
+        client.post(f"/vehiculos/{id_}/editar", data={**VEHICULO, "placa": "ZZF101", "quitar_foto": "1"})
+        assert sql("SELECT foto FROM vehiculos WHERE id_vehiculo=%s", (id_,))[0] is None
+    finally:
+        archivo.unlink(missing_ok=True)
+        client.post(f"/vehiculos/{id_}/eliminar")
+
+
+def test_rechaza_archivo_que_no_es_imagen(client):
+    datos = {**VEHICULO, "placa": "ZZF102",
+             "foto": (io.BytesIO(b"esto no es una imagen"), "virus.png")}
+    r = client.post("/vehiculos/nuevo", data=datos, content_type="multipart/form-data")
+    assert "debe ser una imagen" in r.get_data(as_text=True)
+    assert sql("SELECT COUNT(*) FROM vehiculos WHERE placa='ZZF102'")[0] == 0
 
 
 # ---------------------------------------------------------------- integridad final

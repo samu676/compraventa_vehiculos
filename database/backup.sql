@@ -215,6 +215,7 @@ CREATE TABLE public.vehiculos (
     kilometraje integer DEFAULT 0 NOT NULL,
     precio_venta numeric(14,2) NOT NULL,
     estado character varying(15) DEFAULT 'Disponible'::character varying NOT NULL,
+    foto character varying(200),
     CONSTRAINT vehiculos_anio_check CHECK (((anio >= 1980) AND (anio <= 2027))),
     CONSTRAINT vehiculos_estado_check CHECK (((estado)::text = ANY ((ARRAY['Disponible'::character varying, 'Reservado'::character varying, 'Vendido'::character varying])::text[]))),
     CONSTRAINT vehiculos_kilometraje_check CHECK ((kilometraje >= 0)),
@@ -347,16 +348,16 @@ INSERT INTO public.operaciones VALUES (10, '2026-10-28', 'Compra', 3, 7, 10, 900
 -- Data for Name: vehiculos; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.vehiculos VALUES (1, 1, 'Onix LTZ', 2021, 'JKL482', 'Automóvil', 'Blanco', 38000, 58900000.00, 'Disponible');
-INSERT INTO public.vehiculos VALUES (2, 2, 'Duster Intens', 2019, 'HTR215', 'SUV', 'Gris', 72000, 62500000.00, 'Vendido');
-INSERT INTO public.vehiculos VALUES (3, 3, 'Mazda 3 Grand Touring', 2022, 'MZD903', 'Automóvil', 'Rojo', 21000, 98000000.00, 'Disponible');
-INSERT INTO public.vehiculos VALUES (4, 4, 'Hilux 4x4', 2018, 'TYH118', 'Camioneta', 'Plata', 110000, 135000000.00, 'Vendido');
-INSERT INTO public.vehiculos VALUES (5, 5, 'Picanto Vibrant', 2020, 'KPC774', 'Automóvil', 'Azul', 45000, 42000000.00, 'Reservado');
-INSERT INTO public.vehiculos VALUES (6, 6, 'Frontier', 2017, 'NFR640', 'Camioneta', 'Negro', 128000, 95000000.00, 'Disponible');
-INSERT INTO public.vehiculos VALUES (7, 7, 'Escape SE', 2019, 'FES331', 'SUV', 'Blanco', 64000, 88000000.00, 'Vendido');
-INSERT INTO public.vehiculos VALUES (8, 8, 'Gol Trendline', 2016, 'VWG557', 'Automóvil', 'Gris', 96000, 31500000.00, 'Disponible');
-INSERT INTO public.vehiculos VALUES (9, 9, 'Tucson', 2021, 'HTC209', 'SUV', 'Negro', 33000, 118000000.00, 'Disponible');
-INSERT INTO public.vehiculos VALUES (10, 10, 'FZ 2.0', 2022, 'YMF12G', 'Motocicleta', 'Azul', 15000, 11800000.00, 'Vendido');
+INSERT INTO public.vehiculos VALUES (1, 1, 'Onix LTZ', 2021, 'JKL482', 'Automóvil', 'Blanco', 38000, 58900000.00, 'Disponible', 'jkl482.jpg');
+INSERT INTO public.vehiculos VALUES (2, 2, 'Duster Intens', 2019, 'HTR215', 'SUV', 'Gris', 72000, 62500000.00, 'Vendido', 'htr215.jpg');
+INSERT INTO public.vehiculos VALUES (3, 3, 'Mazda 3 Grand Touring', 2022, 'MZD903', 'Automóvil', 'Rojo', 21000, 98000000.00, 'Disponible', 'mzd903.jpg');
+INSERT INTO public.vehiculos VALUES (4, 4, 'Hilux 4x4', 2018, 'TYH118', 'Camioneta', 'Plata', 110000, 135000000.00, 'Vendido', 'tyh118.jpg');
+INSERT INTO public.vehiculos VALUES (5, 5, 'Picanto Vibrant', 2020, 'KPC774', 'Automóvil', 'Azul', 45000, 42000000.00, 'Reservado', 'kpc774.jpg');
+INSERT INTO public.vehiculos VALUES (6, 6, 'Frontier', 2017, 'NFR640', 'Camioneta', 'Negro', 128000, 95000000.00, 'Disponible', 'nfr640.jpg');
+INSERT INTO public.vehiculos VALUES (7, 7, 'Escape SE', 2019, 'FES331', 'SUV', 'Blanco', 64000, 88000000.00, 'Vendido', 'fes331.jpg');
+INSERT INTO public.vehiculos VALUES (8, 8, 'Gol Trendline', 2016, 'VWG557', 'Automóvil', 'Gris', 96000, 31500000.00, 'Disponible', 'vwg557.jpg');
+INSERT INTO public.vehiculos VALUES (9, 9, 'Tucson', 2021, 'HTC209', 'SUV', 'Negro', 33000, 118000000.00, 'Disponible', 'htc209.jpg');
+INSERT INTO public.vehiculos VALUES (10, 10, 'FZ 2.0', 2022, 'YMF12G', 'Motocicleta', 'Azul', 15000, 11800000.00, 'Vendido', 'ymf12g.jpg');
 
 
 --

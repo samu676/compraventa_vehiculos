@@ -5,15 +5,36 @@
 {% block content %}
 <h1 class="h3 mb-3">{{ titulo }}</h1>
 <div class="card"><div class="card-body">
-  <form method="post" novalidate>
-    {# Vista previa: cambia en vivo al elegir el tipo y el color #}
-    <div class="vista-previa mb-3 text-center" id="vista-previa">
-      {% for t in tipos %}
-        <div data-previa="{{ t }}" class="{{ '' if (item.tipo or 'Automóvil') == t else 'd-none' }} mx-auto" style="max-width: 280px">
-          {{ dibujo.silueta(t, item.color) }}
+  {# enctype multipart es necesario para poder enviar archivos (la foto) #}
+  <form method="post" enctype="multipart/form-data" novalidate>
+    <div class="row g-4 align-items-center mb-4">
+      <div class="col-md-5">
+        {# Vista previa: muestra la foto, o el dibujo según el tipo y el color #}
+        <div class="vista-previa text-center" id="vista-previa">
+          <img id="previa-foto" alt="Foto del vehículo"
+               class="foto-vehiculo foto-grande rounded-3 {{ '' if item.foto else 'd-none' }}"
+               src="{{ url_for('static', filename='fotos/' ~ item.foto) if item.foto else '' }}">
+          <div id="previa-dibujo" class="{{ 'd-none' if item.foto }}">
+            {% for t in tipos %}
+              <div data-previa="{{ t }}" class="{{ '' if (item.tipo or 'Automóvil') == t else 'd-none' }} mx-auto" style="max-width: 280px">
+                {{ dibujo.silueta(t, item.color) }}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="small text-secondary mt-2">Vista previa</div>
         </div>
-      {% endfor %}
-      <div class="small text-secondary mt-1">Vista previa</div>
+      </div>
+      <div class="col-md-7">
+        <label for="foto" class="form-label">Foto del vehículo</label>
+        <input type="file" class="form-control" id="foto" name="foto" accept="image/jpeg,image/png,image/webp">
+        <div class="form-text">JPG, PNG o WEBP, máximo 5 MB. Si no subes una foto, se muestra un dibujo del vehículo.</div>
+        {% if item.foto %}
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" id="quitar_foto" name="quitar_foto" value="1">
+          <label class="form-check-label" for="quitar_foto">Quitar la foto actual</label>
+        </div>
+        {% endif %}
+      </div>
     </div>
     <div class="row g-3">
       <div class="col-md-4">
@@ -103,5 +124,30 @@
   }
   tipo.addEventListener('change', actualizarVistaPrevia);
   color.addEventListener('input', actualizarVistaPrevia);
+
+  // Foto: al elegir un archivo se muestra de una vez (todavía no se ha subido)
+  const inputFoto = document.getElementById('foto');
+  const previaFoto = document.getElementById('previa-foto');
+  const previaDibujo = document.getElementById('previa-dibujo');
+  const quitar = document.getElementById('quitar_foto');
+  const fotoOriginal = previaFoto.getAttribute('src');
+
+  function mostrarFoto(src) {
+    previaFoto.classList.toggle('d-none', !src);
+    previaDibujo.classList.toggle('d-none', !!src);
+    if (src) previaFoto.src = src;
+  }
+  inputFoto.addEventListener('change', () => {
+    const archivo = inputFoto.files[0];
+    if (archivo) {
+      if (quitar) quitar.checked = false;
+      mostrarFoto(URL.createObjectURL(archivo));
+    } else {
+      mostrarFoto(quitar && quitar.checked ? '' : fotoOriginal);
+    }
+  });
+  if (quitar) quitar.addEventListener('change', () => {
+    if (!inputFoto.files[0]) mostrarFoto(quitar.checked ? '' : fotoOriginal);
+  });
 </script>
 {% endblock %}

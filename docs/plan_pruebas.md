@@ -4,7 +4,9 @@ Las pruebas se hacen sobre la aplicación en ejecución (`python app.py`) con lo
 de `database/backup.sql`. Las capturas de pantalla de cada caso se guardan en
 `docs/evidencias/` con el nombre del caso (por ejemplo `CP-01.png`).
 
-Además, los mismos casos están automatizados en `tests/test_crud.py` (36 pruebas con pytest):
+Para los casos CP-01 a CP-18 y CP-22 se inicia sesión primero como administrador.
+
+Además, los mismos casos están automatizados en `tests/test_crud.py` (48 pruebas con pytest):
 
 ```bash
 python -m pytest -v
@@ -30,3 +32,7 @@ python -m pytest -v
 | CP-16 | operaciones | Datos inválidos | Fecha vacía, sin cliente, valor -10 | Mensajes de validación; no se guarda | Cumple ✓ | ![CP-16](evidencias/CP-16.png) |
 | CP-17 | operaciones | Eliminar | Eliminar la operación de CP-14 | Pide confirmación, se elimina y desaparece del listado | Cumple ✓ | ![CP-17](evidencias/CP-17.png) |
 | CP-18 | marcas | Listar | Abrir el menú «Marcas» | Se ven las 10 marcas con el número de vehículos de cada una | Cumple ✓ | ![CP-18](evidencias/CP-18.png) |
+| CP-19 | (sesión) | Iniciar sesión | Usuario «admin» con contraseña incorrecta | Mensaje «Usuario o contraseña incorrectos»; no entra | Cumple ✓ | ![CP-19](evidencias/CP-19.png) |
+| CP-20 | (sesión) | Acceso sin sesión | Un visitante abre `/marcas/` directamente | Redirige al inicio de sesión con el aviso «Inicia sesión para administrar los datos» | Cumple ✓ | ![CP-20](evidencias/CP-20.png) |
+| CP-21 | vehiculos | Catálogo público | Abrir la página principal sin iniciar sesión | Solo aparecen vehículos disponibles o reservados, con foto y sin botones de editar o eliminar | Cumple ✓ | ![CP-21](evidencias/CP-21.png) |
+| CP-22 | vehiculos | Editar con foto | Abrir el Mazda 3 (MZD903) para editar | El formulario muestra la foto actual con las opciones de cambiarla o quitarla | Cumple ✓ | ![CP-22](evidencias/CP-22.png) |

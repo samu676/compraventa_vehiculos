@@ -15,6 +15,10 @@ La tabla **operaciones** tiene **tres llaves foráneas** (`id_vehiculo`, `id_cli
 Cada operación es una **Compra** (el concesionario le compra el vehículo a un cliente) o una
 **Venta** (el concesionario le vende el vehículo a un cliente).
 
+> **Usuarios:** la aplicación tiene un único administrador cuyo usuario y contraseña están en el
+> archivo `.env` (`ADMIN_USUARIO`, `ADMIN_CLAVE`). Por eso no hay una tabla de usuarios y el modelo
+> se mantiene en las 5 tablas que pide el proyecto.
+
 Todas las llaves foráneas usan `ON DELETE RESTRICT` (no se puede borrar un registro que tiene
 datos relacionados) y `ON UPDATE CASCADE`.
 
@@ -40,7 +44,7 @@ que tampoco es llave):
 | Tabla | Por qué cumple 3FN |
 |---|---|
 | marcas | `nombre_marca` y `pais_origen` dependen solo de `id_marca`. |
-| vehiculos | El nombre y el país de la marca **no** se repiten en cada vehículo: solo se guarda `id_marca` (FK). Línea, año, placa, color, kilometraje, precio y estado describen al vehículo y dependen solo de `id_vehiculo`. |
+| vehiculos | El nombre y el país de la marca **no** se repiten en cada vehículo: solo se guarda `id_marca` (FK). Línea, año, placa, color, kilometraje, precio, estado y foto describen al vehículo y dependen solo de `id_vehiculo`. En la base solo se guarda el **nombre del archivo** de la foto, no la imagen. |
 | clientes | Documento, nombre, teléfono, email y ciudad dependen solo de `id_cliente`. |
 | asesores | Nombre, teléfono, email y porcentaje de comisión dependen solo de `id_asesor`. |
 | operaciones | Solo guarda las FK del vehículo, el cliente y el asesor; sus nombres se obtienen con `JOIN`. El `valor` **no** se copia del `precio_venta` del vehículo, porque es el precio negociado en esa operación (puede ser distinto y queda como histórico). La **comisión** del asesor no se guarda: se calcula (`valor × porcentaje_comision`) para no tener un dato derivado que pueda quedar inconsistente. |
@@ -69,6 +73,7 @@ que tampoco es llave):
 | kilometraje | INTEGER | NOT NULL, DEFAULT 0, CHECK (≥ 0) | Kilómetros recorridos |
 | precio_venta | NUMERIC(14,2) | NOT NULL, CHECK (> 0) | Precio al que el concesionario ofrece el vehículo (COP) |
 | estado | VARCHAR(15) | NOT NULL, DEFAULT 'Disponible', CHECK (Disponible, Reservado, Vendido) | Estado en el inventario |
+| foto | VARCHAR(200) | (opcional) | Nombre del archivo de la foto dentro de `static/fotos/`. Si está vacío, la app muestra una ilustración |
 
 ### clientes
 | Campo | Tipo | Restricciones | Descripción |

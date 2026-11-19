@@ -5,12 +5,12 @@
 <div class="hero p-4 p-md-5 mb-4 text-white">
   <div class="row align-items-center g-4">
     <div class="col-md-7 position-relative" style="z-index: 1">
-      <span class="badge rounded-pill etiqueta mb-3 px-3 py-2"><i class="bi bi-shield-check"></i> Vehículos usados certificados</span>
-      <h1 class="display-5 mb-3">Compra y vende vehículos <span class="resaltado">sin complicaciones</span></h1>
+      <span class="badge rounded-pill etiqueta mb-3 px-3 py-2"><i class="bi bi-speedometer2"></i> Panel de administración</span>
+      <h1 class="display-5 mb-3">Hola, <span class="resaltado">{{ session.admin }}</span></h1>
       <p class="mb-4 opacity-75 fs-6">Gestiona el inventario, los clientes, los asesores y cada operación
         del concesionario desde un solo lugar.</p>
       <div class="d-flex flex-wrap gap-2">
-        <a href="{{ url_for('vehiculos.listar') }}" class="btn btn-light px-4"><i class="bi bi-grid-3x2-gap"></i> Ver catálogo</a>
+        <a href="{{ url_for('catalogo') }}" class="btn btn-light px-4"><i class="bi bi-eye"></i> Ver catálogo público</a>
         <a href="{{ url_for('operaciones.crear') }}" class="btn btn-primary px-4"><i class="bi bi-plus-lg"></i> Nueva operación</a>
       </div>
     </div>
@@ -91,7 +91,7 @@
       <ul class="list-unstyled mb-0">
         {% for o in ultimas %}
         <li class="d-flex align-items-center gap-3 py-2 {{ 'border-top' if not loop.first }}">
-          {{ dibujo.silueta(o.tipo, o.color, 'silueta silueta-mini') }}
+          {{ dibujo.imagen(o, 'mini') }}
           <div class="flex-grow-1 small">
             <div class="fw-semibold">{{ o.vehiculo }}</div>
             <div class="text-secondary">{{ o.nombre_cliente }} · {{ o.fecha.strftime('%d/%m/%Y') }}</div>

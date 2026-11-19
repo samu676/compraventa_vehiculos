@@ -16,17 +16,18 @@ INSERT INTO marcas (nombre_marca, pais_origen) VALUES
 ('Hyundai',    'Corea del Sur'),
 ('Yamaha',     'Japón');
 
-INSERT INTO vehiculos (id_marca, linea, anio, placa, tipo, color, kilometraje, precio_venta, estado) VALUES
-( 1, 'Onix LTZ',            2021, 'JKL482', 'Automóvil',   'Blanco',  38000,  58900000.00, 'Disponible'),
-( 2, 'Duster Intens',       2019, 'HTR215', 'SUV',         'Gris',    72000,  62500000.00, 'Vendido'),
-( 3, 'Mazda 3 Grand Touring',2022,'MZD903', 'Automóvil',   'Rojo',    21000,  98000000.00, 'Disponible'),
-( 4, 'Hilux 4x4',           2018, 'TYH118', 'Camioneta',   'Plata',  110000, 135000000.00, 'Vendido'),
-( 5, 'Picanto Vibrant',     2020, 'KPC774', 'Automóvil',   'Azul',    45000,  42000000.00, 'Reservado'),
-( 6, 'Frontier',            2017, 'NFR640', 'Camioneta',   'Negro',  128000,  95000000.00, 'Disponible'),
-( 7, 'Escape SE',           2019, 'FES331', 'SUV',         'Blanco',  64000,  88000000.00, 'Vendido'),
-( 8, 'Gol Trendline',       2016, 'VWG557', 'Automóvil',   'Gris',    96000,  31500000.00, 'Disponible'),
-( 9, 'Tucson',              2021, 'HTC209', 'SUV',         'Negro',   33000, 118000000.00, 'Disponible'),
-(10, 'FZ 2.0',              2022, 'YMF12G', 'Motocicleta', 'Azul',    15000,  11800000.00, 'Vendido');
+-- Las fotos están en static/fotos/ (créditos en docs/creditos_fotos.md)
+INSERT INTO vehiculos (id_marca, linea, anio, placa, tipo, color, kilometraje, precio_venta, estado, foto) VALUES
+( 1, 'Onix LTZ',            2021, 'JKL482', 'Automóvil',   'Blanco',  38000,  58900000.00, 'Disponible', 'jkl482.jpg'),
+( 2, 'Duster Intens',       2019, 'HTR215', 'SUV',         'Gris',    72000,  62500000.00, 'Vendido',    'htr215.jpg'),
+( 3, 'Mazda 3 Grand Touring',2022,'MZD903', 'Automóvil',   'Rojo',    21000,  98000000.00, 'Disponible', 'mzd903.jpg'),
+( 4, 'Hilux 4x4',           2018, 'TYH118', 'Camioneta',   'Plata',  110000, 135000000.00, 'Vendido',    'tyh118.jpg'),
+( 5, 'Picanto Vibrant',     2020, 'KPC774', 'Automóvil',   'Azul',    45000,  42000000.00, 'Reservado',  'kpc774.jpg'),
+( 6, 'Frontier',            2017, 'NFR640', 'Camioneta',   'Negro',  128000,  95000000.00, 'Disponible', 'nfr640.jpg'),
+( 7, 'Escape SE',           2019, 'FES331', 'SUV',         'Blanco',  64000,  88000000.00, 'Vendido',    'fes331.jpg'),
+( 8, 'Gol Trendline',       2016, 'VWG557', 'Automóvil',   'Gris',    96000,  31500000.00, 'Disponible', 'vwg557.jpg'),
+( 9, 'Tucson',              2021, 'HTC209', 'SUV',         'Negro',   33000, 118000000.00, 'Disponible', 'htc209.jpg'),
+(10, 'FZ 2.0',              2022, 'YMF12G', 'Motocicleta', 'Azul',    15000,  11800000.00, 'Vendido',    'ymf12g.jpg');
 
 INSERT INTO clientes (documento, nombre_cliente, telefono, email, ciudad) VALUES
 ('1075234567', 'Daniela Castro Ibarra',      '3104567890', 'daniela.castro@mail.com',   'Neiva'),

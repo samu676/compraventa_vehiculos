@@ -4,6 +4,9 @@ Proyecto final de **Programación Web**. Aplicación web para gestionar un conce
 vehículos usados: su inventario, los clientes, los asesores y las **operaciones de compra y
 venta**. Permite crear, consultar, editar y eliminar (CRUD) los registros de las cinco tablas.
 
+- **Visitantes:** ven solo el **catálogo público** (vehículos disponibles y reservados, con foto).
+- **Administrador:** inicia sesión y gestiona las cinco tablas.
+
 ## Integrantes
 
 - Samuel Ramos Acuña
@@ -18,7 +21,7 @@ cliente, el asesor que la atendió, el valor acordado y la forma de pago.
 | Tabla | Qué guarda |
 |---|---|
 | `marcas` | Fabricantes de vehículos (Chevrolet, Mazda, Toyota…) |
-| `vehiculos` | Inventario: marca, línea, año, placa, tipo, kilometraje, precio y estado |
+| `vehiculos` | Inventario: marca, línea, año, placa, tipo, kilometraje, precio, estado y foto |
 | `clientes` | Personas que le venden o le compran vehículos al concesionario |
 | `asesores` | Empleados que atienden las operaciones y su porcentaje de comisión |
 | `operaciones` | Cada compra o venta. Tiene **3 llaves foráneas**: vehículo, cliente y asesor |
@@ -43,7 +46,8 @@ compraventa_vehiculos/
 ├── config.py            # Lee la configuración del archivo .env
 ├── db.py                # Conexión a PostgreSQL, query / execute y mensajes de error
 ├── validators.py        # Validaciones de los formularios en el servidor
-├── routes/              # Un blueprint (CRUD) por tabla
+├── routes/              # Un blueprint (CRUD) por tabla + inicio de sesión
+│   ├── auth.py          # Login / logout del administrador
 │   ├── marcas.py
 │   ├── vehiculos.py
 │   ├── clientes.py
@@ -52,15 +56,21 @@ compraventa_vehiculos/
 ├── templates/
 │   ├── base.html        # Plantilla común (herencia): menú, mensajes, Bootstrap
 │   ├── _macros.html     # Botones y encabezados reutilizables
-│   ├── index.html       # Panel de inicio
+│   ├── _vehiculo.html   # Foto del vehículo (o ilustración SVG si no tiene)
+│   ├── catalogo.html    # Catálogo público
+│   ├── login.html       # Inicio de sesión
+│   ├── index.html       # Panel del administrador
 │   └── <tabla>/list.html, <tabla>/form.html
-├── static/css/styles.css
+├── static/
+│   ├── css/styles.css   # Estilos, animaciones y modo oscuro
+│   ├── js/app.js        # Buscador, filtros, contadores, modo oscuro
+│   └── fotos/           # Fotos de los vehículos (subidas/ guarda las que sube el admin)
 ├── database/
 │   ├── 01_creacion.sql  # Creación de las 5 tablas (PK, FK, CHECK, UNIQUE)
 │   ├── 02_datos.sql     # 10 registros por tabla
 │   └── backup.sql       # Backup completo generado con pg_dump
 ├── docs/                # MER, diccionario de datos, plan de pruebas y evidencias
-├── tests/test_crud.py   # 36 pruebas automáticas con pytest
+├── tests/test_crud.py   # 48 pruebas automáticas con pytest
 ├── requirements.txt
 ├── requirements-dev.txt # requirements.txt + pytest
 ├── .env.example
@@ -92,7 +102,8 @@ Requisitos: Python 3.10 o superior, PostgreSQL con pgAdmin 4 y Git.
    psql -U postgres -c "CREATE DATABASE compraventa_db"
    psql -U postgres -d compraventa_db -f database/backup.sql
    ```
-4. Copiar `.env.example` como `.env` y poner la contraseña de PostgreSQL:
+4. Copiar `.env.example` como `.env`, poner la contraseña de PostgreSQL y elegir la clave del
+   administrador de la aplicación:
    ```powershell
    copy .env.example .env
    ```
@@ -102,6 +113,9 @@ Requisitos: Python 3.10 o superior, PostgreSQL con pgAdmin 4 y Git.
    DB_NAME=compraventa_db
    DB_USER=postgres
    DB_PASSWORD=tu_contraseña
+
+   ADMIN_USUARIO=admin
+   ADMIN_CLAVE=elige_una_clave
    ```
 
 ## Ejecutar
@@ -111,7 +125,8 @@ Requisitos: Python 3.10 o superior, PostgreSQL con pgAdmin 4 y Git.
 python app.py
 ```
 
-Abrir **http://127.0.0.1:5000**
+Abrir **http://127.0.0.1:5000**: se ve el catálogo público. Para administrar los datos, clic en
+**Iniciar sesión** y entrar con el `ADMIN_USUARIO` y la `ADMIN_CLAVE` del archivo `.env`.
 
 ## Pruebas automáticas
 
@@ -141,12 +156,19 @@ Detalles técnicos:
   eliminar, por ejemplo, un cliente con operaciones, la app muestra un mensaje en vez de fallar.
 - **Errores de la base** (duplicados, CHECK, FK, NOT NULL) traducidos a español en `db.py`.
 - Eliminar siempre usa **POST** y pide confirmación.
+- **Inicio de sesión** (`routes/auth.py`): un `before_request` en `app.py` exige la sesión del
+  administrador en todas las páginas menos el catálogo y el login. La clave se compara con
+  `hmac.compare_digest` y la redirección después del login solo acepta rutas internas.
+- **Subida de fotos** (`routes/vehiculos.py`): solo JPG, PNG o WEBP de máximo 5 MB; además de la
+  extensión se revisan los primeros bytes del archivo, y se guarda con un nombre aleatorio.
 
 Interfaz:
 
-- **Ilustraciones de los vehículos** dibujadas en SVG (`templates/_vehiculo.html`): cambian según
-  el tipo (automóvil, SUV, camioneta, moto) y se pintan con el color registrado. No usan imágenes
-  externas, así que funcionan sin internet.
+- **Catálogo público** con fotos reales, buscador y filtro por tipo; no muestra los vehículos
+  vendidos ni botones de edición.
+- **Fotos de los vehículos**: si un vehículo no tiene foto, se muestra una ilustración SVG
+  (`templates/_vehiculo.html`) según el tipo y pintada con su color.
+- **Modo oscuro** con un botón en la barra de navegación.
 - **Catálogo de vehículos en tarjetas** con filtros por estado y tipo, y botón para cambiar a vista
   de tabla.
 - **Buscador** en todos los listados (`static/js/app.js`): filtra en el navegador sin recargar.
@@ -156,10 +178,19 @@ Interfaz:
 
 ## Capturas
 
-| Inicio | Vehículos |
+| Catálogo público | Inicio de sesión |
+|---|---|
+| ![Catálogo](docs/evidencias/catalogo.png) | ![Login](docs/evidencias/login.png) |
+
+| Panel del administrador | Vehículos |
 |---|---|
 | ![Inicio](docs/evidencias/inicio.png) | ![Vehículos](docs/evidencias/vehiculos.png) |
 
 | Operaciones | Formulario con vista previa |
 |---|---|
 | ![Operaciones](docs/evidencias/operaciones.png) | ![Formulario](docs/evidencias/form_vehiculo.png) |
+
+## Créditos
+
+Las fotos de los vehículos de ejemplo son de Wikimedia Commons, con licencias libres. Los autores
+y las licencias están en [docs/creditos_fotos.md](docs/creditos_fotos.md).

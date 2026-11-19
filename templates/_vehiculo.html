@@ -1,3 +1,15 @@
+{# Foto del vehículo; si no tiene foto, se muestra la ilustración SVG.
+   tamano: 'grande' (tarjetas) o 'mini' (tablas y listas) #}
+{% macro imagen(ve, tamano='grande') %}
+  {% if ve.foto %}
+    <img src="{{ url_for('static', filename='fotos/' ~ ve.foto) }}" loading="lazy"
+         class="foto-vehiculo foto-{{ tamano }}"
+         alt="{{ ve.nombre_marca or '' }} {{ ve.linea or ve.vehiculo or '' }}">
+  {% else %}
+    {{ silueta(ve.tipo, ve.color, 'silueta silueta-mini' if tamano == 'mini' else 'silueta') }}
+  {% endif %}
+{% endmacro %}
+
 {# Ilustración de un vehículo según su tipo, pintada con su color.
    Se dibuja con SVG (no usa imágenes externas), así funciona sin internet. #}
 {% macro silueta(tipo, color, clase='silueta') %}
