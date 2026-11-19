@@ -48,7 +48,7 @@ def _render_form(item, titulo):
 def listar():
     items = query("""
         SELECT o.*, c.nombre_cliente, a.nombre_asesor,
-               m.nombre_marca || ' ' || ve.linea AS vehiculo, ve.placa
+               m.nombre_marca || ' ' || ve.linea AS vehiculo, ve.placa, ve.tipo, ve.color
           FROM operaciones o
           JOIN vehiculos ve ON ve.id_vehiculo = o.id_vehiculo
           JOIN marcas    m  ON m.id_marca     = ve.id_marca

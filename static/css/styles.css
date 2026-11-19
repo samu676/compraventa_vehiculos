@@ -43,6 +43,67 @@ a.card-link-full:hover .card { box-shadow: 0 .25rem .75rem rgba(0,0,0,.08); }
 
 td.num, th.num { text-align: right; white-space: nowrap; }
 
+/* ---------- Animaciones ---------- */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes llegar {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.contenido { animation: aparecer .35s ease-out both; }
+.aparecer  { animation: aparecer .5s ease-out both; animation-delay: var(--retraso, 0ms); }
+
+/* ---------- Portada ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255,255,255,.12) 0, transparent 45%),
+    linear-gradient(120deg, var(--color-principal) 0%, #2e5a73 100%);
+}
+.hero::after {           /* "carretera" al fondo de la portada */
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 18px; height: 4px;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 40px, transparent 40px 70px);
+}
+.hero-auto { animation: llegar .9s cubic-bezier(.2,.8,.2,1) both; }
+.silueta-hero { width: 100%; max-width: 360px; animation: flotar 3s ease-in-out 1s infinite; }
+
+/* ---------- Ilustraciones de vehículos ---------- */
+.silueta { width: 100%; height: auto; display: block; }
+.silueta-mini { width: 64px; flex-shrink: 0; }
+.silueta .carroceria { transition: fill .3s; }
+
+/* ---------- Tarjetas del catálogo ---------- */
+.tarjeta-vehiculo { transition: transform .2s, box-shadow .2s; overflow: hidden; }
+.tarjeta-vehiculo:hover { transform: translateY(-4px); box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1); }
+.tarjeta-imagen {
+  position: relative;
+  padding: 1.25rem 1rem .25rem;
+  background: linear-gradient(180deg, #eef3f7 0%, #dde6ee 100%);
+}
+.tarjeta-imagen .silueta { transition: transform .3s; }
+.tarjeta-vehiculo:hover .tarjeta-imagen .silueta { transform: translateX(6px) scale(1.04); }
+.tarjeta-imagen .estado { position: absolute; top: .6rem; left: .6rem; }
+.precio { color: var(--color-principal); }
+
+.buscador { min-width: 220px; }
+.vista-previa {
+  background: linear-gradient(180deg, #eef3f7 0%, #dde6ee 100%);
+  border-radius: .5rem;
+  padding: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contenido, .aparecer, .hero-auto, .silueta-hero { animation: none; }
+}
+
 /* Placa estilo colombiano (fondo amarillo) */
 .placa {
   display: inline-block;

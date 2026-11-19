@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "_macros.html" as m %}
+{% import "_vehiculo.html" as dibujo %}
 {% block title %}Operaciones{% endblock %}
 {% block content %}
 {{ m.encabezado('Operaciones de compra y venta', 'arrow-left-right', url_for('operaciones.crear'), items|length) }}
@@ -24,7 +25,12 @@
               <span class="badge text-bg-primary"><i class="bi bi-box-arrow-in-down"></i> Compra</span>
             {% endif %}
           </td>
-          <td>{{ o.vehiculo }} <span class="placa small">{{ o.placa }}</span></td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              {{ dibujo.silueta(o.tipo, o.color, 'silueta silueta-mini') }}
+              <div>{{ o.vehiculo }}<br><span class="placa small">{{ o.placa }}</span></div>
+            </div>
+          </td>
           <td>{{ o.nombre_cliente }}</td>
           <td>{{ o.nombre_asesor }}</td>
           <td class="num fw-semibold">{{ o.valor|pesos }}</td>

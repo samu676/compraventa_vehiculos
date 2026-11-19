@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 {% import "_macros.html" as m %}
+{% import "_vehiculo.html" as dibujo %}
 {% block title %}{{ titulo }}{% endblock %}
 {% block content %}
 <h1 class="h3 mb-3">{{ titulo }}</h1>
 <div class="card"><div class="card-body">
   <form method="post" novalidate>
+    {# Vista previa: cambia en vivo al elegir el tipo y el color #}
+    <div class="vista-previa mb-3 text-center" id="vista-previa">
+      {% for t in tipos %}
+        <div data-previa="{{ t }}" class="{{ '' if (item.tipo or 'Automóvil') == t else 'd-none' }} mx-auto" style="max-width: 280px">
+          {{ dibujo.silueta(t, item.color) }}
+        </div>
+      {% endfor %}
+      <div class="small text-secondary mt-1">Vista previa</div>
+    </div>
     <div class="row g-3">
       <div class="col-md-4">
         <label for="id_marca" class="form-label">Marca *</label>
@@ -45,7 +55,10 @@
       <div class="col-md-3">
         <label for="color" class="form-label">Color *</label>
         <input type="text" class="form-control" id="color" name="color" maxlength="30" required
-               value="{{ item.color or '' }}">
+               list="lista-colores" value="{{ item.color or '' }}">
+        <datalist id="lista-colores">
+          {% for nombre in colores %}<option value="{{ nombre }}">{% endfor %}
+        </datalist>
       </div>
       <div class="col-md-3">
         <label for="kilometraje" class="form-label">Kilometraje *</label>
@@ -70,4 +83,25 @@
     {{ m.botones_form(url_for('vehiculos.listar')) }}
   </form>
 </div></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Cambia la ilustración según el tipo y la pinta con el color escrito
+  const colores = {{ colores|tojson }};
+  const tipo = document.getElementById('tipo');
+  const color = document.getElementById('color');
+
+  function actualizarVistaPrevia() {
+    const elegido = tipo.value || 'Automóvil';
+    document.querySelectorAll('[data-previa]').forEach(d =>
+      d.classList.toggle('d-none', d.dataset.previa !== elegido));
+    const nombre = color.value.trim();
+    const clave = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
+    const relleno = colores[clave] || '#6c757d';
+    document.querySelectorAll('#vista-previa .carroceria').forEach(p => p.setAttribute('fill', relleno));
+  }
+  tipo.addEventListener('change', actualizarVistaPrevia);
+  color.addEventListener('input', actualizarVistaPrevia);
+</script>
 {% endblock %}

@@ -1,9 +1,22 @@
-{# Encabezado de cada listado con botón "Nuevo" #}
+{# Encabezado de cada listado con buscador y botón "Nuevo" #}
 {% macro encabezado(titulo, icono, url_nuevo, total) %}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
   <h1 class="h3 mb-0"><i class="bi bi-{{ icono }}"></i> {{ titulo }}
     <span class="badge text-bg-secondary fs-6 align-middle">{{ total }}</span></h1>
-  <a href="{{ url_nuevo }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nuevo</a>
+  <div class="d-flex gap-2 flex-grow-1 flex-md-grow-0">
+    <div class="input-group buscador">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="search" class="form-control" placeholder="Buscar…" aria-label="Buscar" data-buscador>
+    </div>
+    <a href="{{ url_nuevo }}" class="btn btn-primary text-nowrap"><i class="bi bi-plus-lg"></i> Nuevo</a>
+  </div>
+</div>
+{% endmacro %}
+
+{# Mensaje que aparece cuando el buscador no encuentra nada #}
+{% macro sin_resultados() %}
+<div id="sin-resultados" class="text-center text-secondary py-4 d-none">
+  <i class="bi bi-emoji-frown fs-3 d-block"></i> No hay resultados para esa búsqueda.
 </div>
 {% endmacro %}
 

@@ -142,12 +142,24 @@ Detalles técnicos:
 - **Errores de la base** (duplicados, CHECK, FK, NOT NULL) traducidos a español en `db.py`.
 - Eliminar siempre usa **POST** y pide confirmación.
 
+Interfaz:
+
+- **Ilustraciones de los vehículos** dibujadas en SVG (`templates/_vehiculo.html`): cambian según
+  el tipo (automóvil, SUV, camioneta, moto) y se pintan con el color registrado. No usan imágenes
+  externas, así que funcionan sin internet.
+- **Catálogo de vehículos en tarjetas** con filtros por estado y tipo, y botón para cambiar a vista
+  de tabla.
+- **Buscador** en todos los listados (`static/js/app.js`): filtra en el navegador sin recargar.
+- **Panel de inicio** con contadores animados, gráfico de compras vs. ventas por mes (Chart.js)
+  y las últimas operaciones.
+- **Vista previa en vivo** del vehículo en el formulario al elegir el tipo y escribir el color.
+
 ## Capturas
 
 | Inicio | Vehículos |
 |---|---|
 | ![Inicio](docs/evidencias/inicio.png) | ![Vehículos](docs/evidencias/vehiculos.png) |
 
-| Operaciones | Formulario de operación |
+| Operaciones | Formulario con vista previa |
 |---|---|
-| ![Operaciones](docs/evidencias/operaciones.png) | ![Formulario](docs/evidencias/form_operacion.png) |
+| ![Operaciones](docs/evidencias/operaciones.png) | ![Formulario](docs/evidencias/form_vehiculo.png) |

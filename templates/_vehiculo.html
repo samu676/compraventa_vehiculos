@@ -1,0 +1,44 @@
+{# Ilustración de un vehículo según su tipo, pintada con su color.
+   Se dibuja con SVG (no usa imágenes externas), así funciona sin internet. #}
+{% macro silueta(tipo, color, clase='silueta') %}
+{% set fill = color|color_hex %}
+{% set borde = '#9aa1a9' if fill in ['#f4f5f7', '#c3c8ce', '#d8c8a8'] else 'none' %}
+<svg class="{{ clase }}" viewBox="0 0 200 100" role="img" aria-label="{{ tipo }} {{ color }}"
+     data-tipo="{{ tipo }}">
+  <ellipse cx="100" cy="89" rx="88" ry="5" fill="rgba(0,0,0,.13)"/>
+  {% if tipo == 'Motocicleta' %}
+    <circle cx="45" cy="70" r="17" fill="none" stroke="#23272b" stroke-width="7"/>
+    <circle cx="155" cy="70" r="17" fill="none" stroke="#23272b" stroke-width="7"/>
+    <path d="M45,70 L85,50 L125,50 L155,70" fill="none" stroke="#555" stroke-width="5"/>
+    <path d="M155,70 L140,30" stroke="#555" stroke-width="5"/>
+    <path d="M130,27 L152,31" stroke="#23272b" stroke-width="5" stroke-linecap="round"/>
+    <path class="carroceria" d="M80,48 Q90,30 118,34 L132,41 L125,52 L84,54 Z"
+          fill="{{ fill }}" stroke="{{ borde }}"/>
+    <path d="M56,46 L84,43 L84,50 L58,52 Z" fill="#23272b"/>
+  {% elif tipo == 'Camioneta' %}
+    <path class="carroceria" d="M10,72 L10,54 Q10,47 18,46 L40,45 L54,24 Q58,20 66,20 L104,20 L106,45 L190,45 L190,72 Z"
+          fill="{{ fill }}" stroke="{{ borde }}"/>
+    <path d="M58,43 L68,26 L100,26 L100,43 Z" fill="#cfe3f1"/>
+    <path d="M112,50 L186,50" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
+    <rect x="11" y="52" width="7" height="5" rx="1" fill="#ffe08a"/>
+    <circle cx="46" cy="73" r="14" fill="#23272b"/><circle cx="46" cy="73" r="6" fill="#b9bec4"/>
+    <circle cx="160" cy="73" r="14" fill="#23272b"/><circle cx="160" cy="73" r="6" fill="#b9bec4"/>
+  {% elif tipo == 'SUV' %}
+    <path class="carroceria" d="M12,72 L12,52 Q12,45 22,44 L44,42 L58,22 Q62,18 70,18 L162,18 Q170,18 174,24 L186,42 Q190,45 190,52 L190,72 Z"
+          fill="{{ fill }}" stroke="{{ borde }}"/>
+    <path d="M62,40 L72,24 L108,24 L108,40 Z" fill="#cfe3f1"/>
+    <path d="M113,24 L158,24 L168,40 L113,40 Z" fill="#cfe3f1"/>
+    <rect x="13" y="50" width="7" height="5" rx="1" fill="#ffe08a"/>
+    <circle cx="50" cy="73" r="14" fill="#23272b"/><circle cx="50" cy="73" r="6" fill="#b9bec4"/>
+    <circle cx="156" cy="73" r="14" fill="#23272b"/><circle cx="156" cy="73" r="6" fill="#b9bec4"/>
+  {% else %}
+    <path class="carroceria" d="M14,72 L16,58 Q18,52 30,50 L62,47 L84,32 Q90,28 100,28 L134,28 Q144,28 151,35 L164,47 L180,50 Q188,52 188,60 L188,72 Z"
+          fill="{{ fill }}" stroke="{{ borde }}"/>
+    <path d="M70,47 L87,34 L114,34 L114,47 Z" fill="#cfe3f1"/>
+    <path d="M119,34 L134,34 Q141,34 146,39 L153,47 L119,47 Z" fill="#cfe3f1"/>
+    <rect x="16" y="56" width="7" height="5" rx="1" fill="#ffe08a"/>
+    <circle cx="52" cy="73" r="12" fill="#23272b"/><circle cx="52" cy="73" r="5" fill="#b9bec4"/>
+    <circle cx="152" cy="73" r="12" fill="#23272b"/><circle cx="152" cy="73" r="5" fill="#b9bec4"/>
+  {% endif %}
+</svg>
+{% endmacro %}

@@ -1,10 +1,23 @@
 {% extends "base.html" %}
+{% import "_vehiculo.html" as dibujo %}
 {% block title %}Inicio{% endblock %}
 {% block content %}
-<div class="hero rounded-3 p-4 mb-4 text-white">
-  <h1 class="h3 mb-1"><i class="bi bi-car-front-fill"></i> CompraVenta de Vehículos</h1>
-  <p class="mb-0 opacity-75">Gestión del inventario, los clientes, los asesores y las compras y ventas
-    del concesionario.</p>
+<div class="hero rounded-4 p-4 p-md-5 mb-4 text-white">
+  <div class="row align-items-center g-3">
+    <div class="col-md-7">
+      <span class="badge rounded-pill text-bg-light mb-2"><i class="bi bi-shield-check"></i> Vehículos usados certificados</span>
+      <h1 class="display-6 fw-semibold mb-2">CompraVenta de Vehículos</h1>
+      <p class="mb-4 opacity-75">Gestiona el inventario, los clientes, los asesores y cada compra y venta
+        del concesionario desde un solo lugar.</p>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{{ url_for('vehiculos.listar') }}" class="btn btn-light"><i class="bi bi-grid-3x2-gap"></i> Ver catálogo</a>
+        <a href="{{ url_for('operaciones.crear') }}" class="btn btn-outline-light"><i class="bi bi-plus-lg"></i> Nueva operación</a>
+      </div>
+    </div>
+    <div class="col-md-5 text-center hero-auto">
+      {{ dibujo.silueta('SUV', 'Rojo', 'silueta silueta-hero') }}
+    </div>
+  </div>
 </div>
 
 {% set tarjetas = [
@@ -18,10 +31,10 @@
   {% for endpoint, label, icon, n, extra in tarjetas %}
   <div class="col-6 col-md-4 col-lg">
     <a class="card-link-full" href="{{ url_for(endpoint) }}">
-      <div class="card card-tabla {{ extra }} h-100">
+      <div class="card card-tabla {{ extra }} h-100 aparecer" style="--retraso: {{ loop.index0 * 80 }}ms">
         <div class="card-body">
           <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
-          <div class="numero">{{ n }}</div>
+          <div class="numero" data-contar="{{ n }}">{{ n }}</div>
           <div class="small text-secondary">registros</div>
         </div>
       </div>
@@ -32,22 +45,81 @@
 
 <div class="row g-3 mt-1">
   <div class="col-md-4">
-    <div class="card h-100"><div class="card-body">
+    <div class="card h-100 aparecer"><div class="card-body">
       <div class="text-secondary"><i class="bi bi-check-circle"></i> Vehículos disponibles</div>
-      <div class="fs-3 fw-semibold">{{ c.disponibles }}</div>
+      <div class="fs-3 fw-semibold" data-contar="{{ c.disponibles }}">{{ c.disponibles }}</div>
     </div></div>
   </div>
   <div class="col-md-4">
-    <div class="card h-100"><div class="card-body">
+    <div class="card h-100 aparecer"><div class="card-body">
       <div class="text-secondary"><i class="bi bi-box-arrow-in-down"></i> Total invertido en compras</div>
-      <div class="fs-3 fw-semibold">{{ c.total_compras|pesos }}</div>
+      <div class="fs-3 fw-semibold" data-contar="{{ c.total_compras|int }}" data-pesos>{{ c.total_compras|pesos }}</div>
     </div></div>
   </div>
   <div class="col-md-4">
-    <div class="card h-100"><div class="card-body">
+    <div class="card h-100 aparecer"><div class="card-body">
       <div class="text-secondary"><i class="bi bi-box-arrow-up"></i> Total recibido por ventas</div>
-      <div class="fs-3 fw-semibold text-success">{{ c.total_ventas|pesos }}</div>
+      <div class="fs-3 fw-semibold text-success" data-contar="{{ c.total_ventas|int }}" data-pesos>{{ c.total_ventas|pesos }}</div>
     </div></div>
   </div>
 </div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-7">
+    <div class="card h-100 aparecer"><div class="card-body">
+      <h2 class="h6 text-secondary mb-3"><i class="bi bi-bar-chart"></i> Compras vs. ventas por mes</h2>
+      <canvas id="grafico" height="230" aria-label="Gráfico de compras y ventas por mes"></canvas>
+    </div></div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card h-100 aparecer"><div class="card-body">
+      <h2 class="h6 text-secondary mb-3"><i class="bi bi-clock-history"></i> Últimas operaciones</h2>
+      <ul class="list-unstyled mb-0">
+        {% for o in ultimas %}
+        <li class="d-flex align-items-center gap-3 py-2 {{ 'border-top' if not loop.first }}">
+          {{ dibujo.silueta(o.tipo, o.color, 'silueta silueta-mini') }}
+          <div class="flex-grow-1 small">
+            <div class="fw-medium">{{ o.vehiculo }}</div>
+            <div class="text-secondary">{{ o.nombre_cliente }} · {{ o.fecha.strftime('%d/%m/%Y') }}</div>
+          </div>
+          <div class="text-end small">
+            <span class="badge text-bg-{{ 'success' if o.tipo_operacion == 'Venta' else 'primary' }}">{{ o.tipo_operacion }}</span>
+            <div class="fw-semibold">{{ o.valor|pesos }}</div>
+          </div>
+        </li>
+        {% else %}
+        <li class="text-secondary">Aún no hay operaciones.</li>
+        {% endfor %}
+      </ul>
+    </div></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  // Gráfico de barras con los datos que envía Flask (si no hay internet, simplemente no se dibuja)
+  const datos = {{ grafico|tojson }};
+  if (window.Chart) {
+    const nombresMes = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    new Chart(document.getElementById('grafico'), {
+      type: 'bar',
+      data: {
+        labels: datos.meses.map(m => nombresMes[parseInt(m.slice(5)) - 1] + ' ' + m.slice(0, 4)),
+        datasets: [
+          { label: 'Compras', data: datos.compras, backgroundColor: '#2c6db3', borderRadius: 6 },
+          { label: 'Ventas',  data: datos.ventas,  backgroundColor: '#2e8b57', borderRadius: 6 },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: { callbacks: { label: c => c.dataset.label + ': $ ' + c.parsed.y.toLocaleString('es-CO') } },
+        },
+        scales: { y: { ticks: { callback: v => '$ ' + (v / 1000000) + ' M' } } },
+      },
+    });
+  }
+</script>
 {% endblock %}
